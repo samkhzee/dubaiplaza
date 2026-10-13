@@ -1,0 +1,1808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dubai Plaza — Wireframe (App)</title>
+<style>
+:root{
+  --sidebar:#2c2f33;--sidebar-hover:#3d4248;--sidebar-w:248px;
+  --subnav-w:200px;
+  --topbar-h:52px;--border:#d4d4d4;--bg:#ebebeb;--panel:#fff;
+  --wire:#b8b8b8;--wire-dark:#888;--text:#333;--muted:#777;
+  --active:#4a7c59;--active-bg:#e8f0ea;--link:#356;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text)}
+button,input,select{font:inherit;cursor:pointer}
+.app{display:flex;height:100vh;width:100vw}
+
+/* Sidebar — Zoho-style */
+.sidebar{width:var(--sidebar-w);background:var(--sidebar);color:#ccc;display:flex;flex-direction:column;flex-shrink:0;min-height:0;height:100vh;overflow:hidden}
+.sidebar-brand{padding:14px 16px;border-bottom:1px solid #444;font-weight:600;color:#fff;font-size:15px;letter-spacing:.02em}
+.sidebar-brand small{display:block;font-size:10px;color:#888;font-weight:400;margin-top:2px}
+.sidebar nav{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:8px 0;-webkit-overflow-scrolling:touch}
+.sidebar nav button{
+  display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;border:none;background:transparent;
+  color:#bbb;text-align:left;font-size:13px
+}
+.sidebar nav button:hover{background:var(--sidebar-hover);color:#fff}
+.sidebar nav button.active{background:#1e2124;color:#fff;border-left:3px solid var(--active);padding-left:13px}
+.sidebar nav .ico{width:18px;height:18px;border:1px solid #666;background:#444;border-radius:3px;flex-shrink:0}
+.sidebar nav .sub{padding-left:44px;font-size:12px;padding-top:7px;padding-bottom:7px}
+.sidebar nav .nav-group{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#666;padding:10px 16px 4px}
+.sidebar-foot{padding:10px 16px;border-top:1px solid #444;font-size:10px;color:#666;flex-shrink:0}
+.module-shell{display:flex;flex:1;min-height:0;overflow:hidden}
+.module-subnav{width:var(--subnav-w);background:#f4f4f4;border-right:1px solid var(--border);padding:12px 0;overflow-y:auto;flex-shrink:0}
+.module-subnav button{display:block;width:100%;text-align:left;padding:10px 16px;border:none;background:transparent;font-size:12px;color:var(--text)}
+.module-subnav button:hover{background:#e8e8e8}
+.module-subnav button.on{background:var(--panel);border-left:3px solid var(--active);font-weight:600;padding-left:13px}
+.module-main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.summary-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.summary-strip .cell{background:var(--panel);padding:12px 16px}
+.summary-strip .cell span{display:block;font-size:10px;color:var(--muted);text-transform:uppercase}
+.summary-strip .cell strong{font-size:18px;margin-top:4px;display:block}
+.table-wrap.flush{margin:0;border:none;border-radius:0;flex:1}
+.split-list.wide{width:400px}
+.pos-right.wide{width:440px}
+.grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:1200px){.summary-strip{grid-template-columns:repeat(3,1fr)}.detail-grid{grid-template-columns:1fr}}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.topbar{
+  height:var(--topbar-h);background:var(--panel);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0
+}
+.topbar .global-search{
+  flex:1;max-width:480px;height:36px;border:1px solid var(--border);border-radius:4px;
+  padding:0 12px;display:flex;align-items:center;gap:8px;background:#fafafa;color:var(--muted)
+}
+.topbar .global-search input{border:none;background:transparent;flex:1;outline:none;color:var(--text)}
+.topbar .actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:4px;background:#fafafa;color:var(--muted)}
+.btn{padding:7px 14px;border:1px solid var(--border);border-radius:4px;background:var(--panel);color:var(--text);text-decoration:none;display:inline-block}
+a.btn{color:inherit}
+a.btn.primary{color:#fff}
+.btn.primary{background:var(--active);border-color:#3d6649;color:#fff}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.ghost{background:transparent}
+
+.content{flex:1;overflow:auto;padding:0}
+.view{display:none;height:100%;flex-direction:column}
+.view.active{display:flex}
+
+/* Page header inside content — Zoho list pages */
+.page-head{
+  background:var(--panel);border-bottom:1px solid var(--border);padding:12px 20px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap
+}
+.page-head h1{font-size:18px;font-weight:600;flex:1}
+.page-head .breadcrumb{font-size:12px;color:var(--muted);width:100%;margin-top:-4px}
+.page-head .breadcrumb a{color:var(--link);text-decoration:none;cursor:pointer}
+.toolbar{padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar .spacer{flex:1}
+.filter-pill{padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:#fff;font-size:12px;color:var(--muted)}
+
+/* Tables */
+.table-wrap{flex:1;overflow:auto;padding:0 20px 20px;background:var(--panel);margin:16px;border:1px solid var(--border);border-radius:4px}
+table.data{width:100%;border-collapse:collapse;font-size:12px}
+table.data th{
+  text-align:left;padding:10px 12px;border-bottom:2px solid var(--border);background:#f7f7f7;
+  font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:600;position:sticky;top:0
+}
+table.data td{padding:10px 12px;border-bottom:1px solid #eee;vertical-align:middle}
+table.data tr:hover td{background:#fafafa}
+table.data tr.clickable{cursor:pointer}
+.tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;border:1px solid var(--border);background:#f5f5f5}
+.tag.green{background:#e8f5e9;border-color:#a5d6a7;color:#2e7d32}
+.tag.gray{background:#eee;color:#666}
+
+/* Split detail — Zoho item detail */
+.split{display:flex;flex:1;min-height:0;background:var(--bg)}
+.split-list{width:340px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.split-list .list-search{padding:10px;border-bottom:1px solid var(--border)}
+.split-list .list-search input{width:100%;padding:8px;border:1px solid var(--border);border-radius:4px}
+.split-list .list-items{overflow-y:auto;flex:1}
+.list-item{padding:12px 14px;border-bottom:1px solid #eee;cursor:pointer}
+.list-item:hover{background:#f9f9f9}
+.list-item.on{background:var(--active-bg);border-left:3px solid var(--active);padding-left:11px}
+.split-detail{flex:1;overflow-y:auto;padding:20px}
+.detail-card{background:var(--panel);border:1px solid var(--border);border-radius:4px;margin-bottom:16px}
+.detail-card .card-head{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;display:flex;align-items:center;gap:8px}
+.detail-card .card-body{padding:16px}
+.field-row{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;margin-bottom:10px;font-size:12px}
+.field-row label{color:var(--muted)}
+.detail-grid .detail-card .card-head{padding:10px 14px;font-size:13px}
+.detail-grid .detail-card .card-body{padding:10px 14px 12px}
+.detail-grid .field-row{
+  display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  margin-bottom:5px;font-size:12px;line-height:1.35
+}
+.detail-grid .field-row:last-child{margin-bottom:0}
+.detail-grid .field-row label{flex:0 0 auto;color:var(--muted)}
+.detail-grid .field-row > div{
+  flex:1 1 auto;min-width:0;text-align:right;font-weight:500;color:var(--text);white-space:nowrap
+}
+.detail-grid .field-row.field-row--wrap > div{white-space:normal;word-break:break-word}
+.ph{background:linear-gradient(90deg,#e8e8e8 0%,#f4f4f4 50%,#e8e8e8 100%);background-size:200% 100%;height:14px;border-radius:2px;max-width:200px}
+.ph.wide{max-width:100%}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--panel);padding:0 20px}
+.tabs button{padding:12px 16px;border:none;background:none;border-bottom:2px solid transparent;color:var(--muted);font-size:13px}
+.tabs button.on{border-bottom-color:var(--active);color:var(--text);font-weight:600}
+
+/* Dashboard cards */
+.dash{padding:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1100px){.dash{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px}
+.stat-card .label{font-size:11px;color:var(--muted);text-transform:uppercase}
+.stat-card .val{font-size:24px;font-weight:600;margin-top:6px;color:#222}
+.dash-row{padding:0 20px 20px;display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.panel-box{background:var(--panel);border:1px solid var(--border);border-radius:4px;min-height:200px}
+.panel-box .ph-head{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px}
+
+/* POS / Sale layout */
+.pos{display:flex;flex:1;min-height:0}
+.pos-left{flex:1;padding:20px;overflow:auto}
+.pos-right{width:380px;background:var(--panel);border-left:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto;align-self:stretch}
+.pos-search-bar{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:4px;padding:0 12px;height:42px;background:#fff;margin-bottom:12px;width:100%}
+.pos-search-bar .ico-search{flex-shrink:0;color:#888;font-size:15px;line-height:1}
+.pos-search-bar input{flex:1;min-width:0;border:none;background:transparent;outline:none;font-size:13px}
+.tabs.pos-tabs{padding:0 0 0 0;margin-bottom:12px;background:transparent}
+.tabs.pos-tabs button{padding:10px 14px;font-size:13px;cursor:pointer}
+.quick-wrap{position:relative}
+.quick-menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--panel);border:1px solid var(--border);border-radius:6px;min-width:200px;z-index:400;display:none;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.quick-menu.open{display:block}
+.quick-menu button{display:block;width:100%;text-align:left;padding:10px 14px;border:none;background:transparent;font-size:13px;color:var(--text)}
+.quick-menu button:hover{background:#f0f0f0}
+.line-item{border:1px solid var(--border);border-radius:4px;padding:12px;background:#fafafa}
+.amount-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
+.amount-row.total{font-weight:700;font-size:16px;border-top:1px solid var(--border);margin-top:8px;padding-top:12px}
+
+/* QR receipt modal area */
+.receipt-center{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;background:var(--bg)}
+.receipt-sheet{width:420px;background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:24px;text-align:center}
+.qr-box{width:160px;height:160px;margin:16px auto;border:2px solid #333;background:#fff;display:flex;align-items:center;justify-content:center}
+.qr-box canvas,.qr-box img{max-width:100%;max-height:100%}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-backdrop.open{display:flex}
+.modal-panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;width:100%;max-width:480px;padding:20px;max-height:90vh;overflow:auto}
+.toast{position:fixed;top:60px;right:16px;background:#333;color:#fff;padding:10px 14px;border-radius:4px;font-size:12px;z-index:300;display:none}
+.toast.show{display:block}
+.import-step-panel{display:none}
+.import-step-panel.active{display:block}
+
+/* Import steps */
+.steps{display:flex;padding:16px 20px;background:var(--panel);border-bottom:1px solid var(--border);gap:0}
+.step{flex:1;text-align:center;padding:10px;font-size:12px;color:var(--muted);border-bottom:3px solid #eee}
+.step.done{color:var(--text)}
+.step.current{border-bottom-color:var(--active);font-weight:600;color:var(--text)}
+.import-body{padding:20px 20px 32px;flex:1 1 auto}
+.dropzone{border:2px dashed var(--wire);border-radius:4px;padding:60px;text-align:center;background:var(--panel);color:var(--muted)}
+
+/* Import wizard — let page scroll (no clipped inner box) */
+.view.active#view-inventory-import{height:auto;min-height:100%}
+#view-inventory-import .module-shell{overflow:visible;flex:1 1 auto;min-height:auto}
+#view-inventory-import .module-main{overflow:visible;min-height:auto}
+#view-inventory-import .import-body{overflow:visible;flex:0 0 auto}
+#view-inventory-import .detail-card .card-body{overflow:visible;max-height:none}
+#view-inventory-import .import-step-panel.active{padding-bottom:8px}
+
+/* Accounts */
+.chart-ph{height:180px;background:#f0f0f0;border:1px dashed var(--wire);margin:16px;display:flex;align-items:flex-end;justify-content:space-around;padding:16px}
+.bar{width:12%;background:#ccc;min-height:20px;border-radius:2px 2px 0 0}
+
+.wf-badge{position:fixed;bottom:8px;left:calc(var(--sidebar-w) + 8px);background:#333;color:#fff;font-size:9px;padding:5px 8px;border-radius:4px;opacity:.75;z-index:99;pointer-events:none;max-width:320px}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="sidebar-brand">Dubai Plaza<small>Stock · Wireframe</small></div>
+  <nav id="nav">
+    <button type="button" data-view="dashboard" class="active"><span class="ico"></span> Dashboard</button>
+    <div class="nav-group">Inventory module</div>
+    <button type="button" data-view="inventory"><span class="ico"></span> Inventory</button>
+    <button type="button" data-view="inventory-lots" class="sub">Import lots</button>
+    <button type="button" data-view="inventory-import" class="sub">Excel import</button>
+    <button type="button" data-view="inventory-accessories" class="sub">Accessories</button>
+    <button type="button" data-view="inventory-adjust" class="sub">Adjustments</button>
+    <div class="nav-group">Sales module</div>
+    <button type="button" data-view="sales"><span class="ico"></span> Sales</button>
+    <button type="button" data-view="sales-new" class="sub">New sale (POS)</button>
+    <button type="button" data-view="sales-returns" class="sub">Returns</button>
+    <button type="button" data-view="sales-payments" class="sub">Collect payment</button>
+    <div class="nav-group">Customers module</div>
+    <button type="button" data-view="customers"><span class="ico"></span> Customers</button>
+    <button type="button" data-view="customer-detail" class="sub">Customer profile</button>
+    <button type="button" data-view="customers-overdue" class="sub">Overdue Udhaar</button>
+    <button type="button" data-view="customers-new" class="sub">New customer</button>
+    <div class="nav-group">Accounts module</div>
+    <button type="button" data-view="accounts"><span class="ico"></span> Accounts</button>
+    <button type="button" data-view="accounts-cashbook" class="sub">Cash book</button>
+    <button type="button" data-view="accounts-receivables" class="sub">Receivables</button>
+    <button type="button" data-view="accounts-profit" class="sub">Profit & loss</button>
+    <div class="nav-group">Other</div>
+    <button type="button" data-view="reports"><span class="ico"></span> Reports</button>
+    <button type="button" data-view="settings"><span class="ico"></span> Settings</button>
+  </nav>
+  <div class="sidebar-foot">Wireframe prototype · not live data</div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="global-search">
+      <span style="color:#999">⌕</span>
+      <input type="text" placeholder="Search laptops — dell i5 8gb 256ssd" id="globalSearch">
+      <button type="button" class="btn sm primary" data-goto="sales-new">Sell</button>
+    </div>
+    <span class="chip">Dubai Plaza Shop</span>
+    <div class="actions">
+      <div class="quick-wrap">
+        <button type="button" class="btn sm" id="btn-quick" aria-expanded="false">+ Quick ▾</button>
+        <div class="quick-menu" id="quick-menu">
+          <button type="button" data-goto="sales-new">New sale (POS)</button>
+          <button type="button" data-goto="inventory-import">Import Excel</button>
+          <button type="button" id="quick-add-laptop">Add laptop</button>
+          <button type="button" data-goto="customers-new">New customer</button>
+          <button type="button" data-goto="sales-payments" data-pay-ctx="customers">Receive payment</button>
+        </div>
+      </div>
+      <span class="chip">Owner ▾</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <div class="page-head"><h1>Dashboard</h1></div>
+      <div class="dash">
+        <div class="stat-card"><div class="label">Sales today</div><div class="val">₨ 128,500</div></div>
+        <div class="stat-card"><div class="label">Udhaar outstanding</div><div class="val">₨ 342,000</div></div>
+        <div class="stat-card"><div class="label">In stock laptops</div><div class="val">124</div></div>
+        <div class="stat-card"><div class="label">30+ days unsold</div><div class="val">18</div></div>
+      </div>
+      <div class="dash-row">
+        <div class="panel-box">
+          <div class="ph-head">Recent sales</div>
+          <table class="data" style="margin:0">
+            <tr><th>Bill</th><th>Customer</th><th>Amount</th><th></th></tr>
+            <tr class="clickable" data-goto="sales-receipt"><td>#1088</td><td>Ahmed</td><td>45,000</td><td><span class="tag">QR</span></td></tr>
+            <tr><td>#1087</td><td>Walk-in</td><td>38,000</td><td></td></tr>
+          </table>
+        </div>
+        <div class="panel-box">
+          <div class="ph-head">Alerts</div>
+          <div style="padding:14px;font-size:12px;color:var(--muted);line-height:1.8">
+            3 customers overdue<br>5 laptops low margin<br>2 accessories low qty
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY LIST (large module) -->
+    <section class="view" id="view-inventory">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head">
+            <div><div class="breadcrumb"><a data-goto="dashboard">Home</a> / Inventory / Laptops</div><h1>All laptops (serialized)</h1></div>
+            <button type="button" class="btn primary" data-goto="inventory-import">Import Excel</button>
+            <button type="button" class="btn" id="btn-add-laptop">+ Add laptop</button>
+            <button type="button" class="btn sm">Bulk actions ▾</button>
+          </div>
+          <div class="summary-strip" id="inv-summary">
+            <div class="cell"><span>In stock units</span><strong id="sum-in-stock">—</strong></div>
+            <div class="cell"><span>Sold (period)</span><strong>47</strong></div>
+            <div class="cell"><span>Stock value (cost)</span><strong id="sum-stock-val">—</strong></div>
+            <div class="cell"><span>30+ days unsold</span><strong>18</strong></div>
+            <div class="cell"><span>Avg days in stock</span><strong>22</strong></div>
+          </div>
+          <div class="toolbar">
+            <input id="inv-filter-q" placeholder="Filter list…" style="padding:7px 12px;border:1px solid var(--border);border-radius:4px;width:200px">
+            <span class="filter-pill">Status: In stock ▾</span>
+            <span class="filter-pill">Brand ▾</span>
+            <span class="filter-pill">Lot ▾</span>
+            <span class="filter-pill">CPU ▾</span>
+            <span class="filter-pill">Sort: Newest ▾</span>
+            <div class="spacer"></div>
+            <button type="button" class="btn sm ghost">Columns ▾</button>
+            <button type="button" class="btn sm">Export CSV</button>
+          </div>
+          <div class="table-wrap flush">
+            <table class="data">
+              <thead><tr>
+                <th><input type="checkbox"></th><th>Item ID</th><th>Item name</th><th>Configuration</th><th>Serial</th><th>Lot</th><th>Days</th><th>Cost</th><th>Rate</th><th>Margin</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="inventory-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY DETAIL (large split) -->
+    <section class="view" id="view-inventory-detail">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head">
+            <div><div class="breadcrumb"><a data-goto="inventory">Inventory</a> / <span id="det-breadcrumb-id">—</span></div><h1 id="det-title">Laptop detail</h1></div>
+            <button type="button" class="btn primary" id="det-sell-btn">Sell unit</button>
+            <button type="button" class="btn" id="det-adjust-btn">Adjust cost/rate</button>
+            <button type="button" class="btn" id="det-print-btn">Print label</button>
+            <div class="quick-wrap">
+              <button type="button" class="btn" id="det-more-btn">More ▾</button>
+              <div class="quick-menu" id="det-more-menu">
+                <button type="button" id="det-mark-defect">Mark defective</button>
+                <button type="button" data-goto="inventory-import">View import lot</button>
+                <button type="button" id="det-duplicate">Duplicate as new ID (demo)</button>
+              </div>
+            </div>
+          </div>
+          <div class="split" style="flex:1">
+            <div class="split-list wide">
+              <div class="list-search"><input id="det-list-filter" placeholder="Filter items…"></div>
+              <div class="list-items" id="det-list-items"></div>
+            </div>
+            <div class="split-detail">
+              <div class="tabs" id="det-tabs">
+                <button type="button" class="on" data-det-tab="overview">Overview</button>
+                <button type="button" data-det-tab="history">Stock history</button>
+                <button type="button" data-det-tab="sales">Sales link</button>
+                <button type="button" data-det-tab="lot">Lot / import</button>
+                <button type="button" data-det-tab="notes">Notes & defects</button>
+              </div>
+              <div id="det-panel-overview">
+                <div class="detail-grid">
+                  <div class="detail-card"><div class="card-head">Identification</div><div class="card-body" id="det-id-block"></div></div>
+                  <div class="detail-card"><div class="card-head">Pricing & margin</div><div class="card-body" id="det-price-block"></div></div>
+                </div>
+                <div class="detail-card"><div class="card-head">Timeline / audit</div><div class="card-body">
+                  <table class="data"><thead><tr><th>Date</th><th>Event</th><th>User</th><th>Detail</th></tr></thead>
+                  <tbody id="det-timeline"></tbody></table>
+                </div></div>
+              </div>
+              <div id="det-panel-history" hidden class="detail-card" style="margin-top:16px"><div class="card-head">Stock history</div><div class="card-body"><table class="data"><thead><tr><th>Date</th><th>Action</th><th>Detail</th></tr></thead><tbody id="det-history-body"></tbody></table></div></div>
+              <div id="det-panel-sales" hidden class="detail-card" style="margin-top:16px"><div class="card-head">Sales link</div><div class="card-body" id="det-sales-body"></div></div>
+              <div id="det-panel-lot" hidden class="detail-card" style="margin-top:16px"><div class="card-head">Lot / import</div><div class="card-body" id="det-lot-body"></div></div>
+              <div id="det-panel-notes" hidden class="detail-card" style="margin-top:16px"><div class="card-head">Notes & defects</div><div class="card-body">
+                <textarea id="det-notes-input" rows="4" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" placeholder="Condition, defects, battery…"></textarea>
+                <button type="button" class="btn primary sm" id="det-notes-save" style="margin-top:10px">Save notes</button>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-inventory-lots">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><div class="breadcrumb">Inventory / Lots</div><h1>Import lots (containers)</h1></div><button class="btn primary" data-goto="inventory-import">+ New lot from Excel</button></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Lot #</th><th>Supplier file</th><th>Imported</th><th>Units</th><th>Total cost</th><th>Avg cost</th><th>Status</th><th></th></tr></thead>
+          <tbody><tr><td>LOT-12</td><td>container_oct.xlsx</td><td>01-Oct-2026</td><td>24</td><td>924,000</td><td>38,500</td><td><span class="tag green">Active</span></td><td><button class="btn sm">View units</button></td></tr>
+          <tr><td>LOT-11</td><td>hp_batch.csv</td><td>18-Sep-2026</td><td>18</td><td>702,000</td><td>39,000</td><td><span class="tag gray">Closed</span></td><td><button class="btn sm">View units</button></td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-inventory-accessories">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Accessories (quantity stock)</h1></div><button class="btn primary">+ Add accessory</button></div>
+          <div class="summary-strip"><div class="cell"><span>SKU count</span><strong>38</strong></div><div class="cell"><span>Low stock alerts</span><strong>2</strong></div><div class="cell"><span>Qty on hand</span><strong>412</strong></div><div class="cell"><span>Value</span><strong>₨ 186K</strong></div><div class="cell"><span>Reorder needed</span><strong>5</strong></div></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>On hand</th><th>Reorder at</th><th>Cost</th><th>Rate</th><th></th></tr></thead>
+          <tbody><tr><td>ACC-01</td><td>Dell 65W Charger</td><td>Charger</td><td>24</td><td>10</td><td>800</td><td>1,500</td><td><button class="btn sm">Adjust qty</button></td></tr>
+          <tr><td>ACC-02</td><td>8GB DDR4 SODIMM</td><td>RAM</td><td>6</td><td>8</td><td>2,200</td><td>3,500</td><td><button class="btn sm">Adjust qty</button></td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-inventory-adjust">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Stock adjustments</h1></div><button class="btn primary">+ New adjustment</button></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Date</th><th>Ref</th><th>Item</th><th>Type</th><th>Qty</th><th>Reason</th><th>By</th></tr></thead>
+          <tbody><tr><td>05-Oct</td><td>ADJ-88</td><td>LP-1020</td><td>Status</td><td>—</td><td>Marked defective</td><td>Manager</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPORT -->
+    <section class="view" id="view-inventory-import">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+      <div class="page-head">
+        <div class="breadcrumb"><a data-goto="inventory">Inventory</a> / Import</div>
+        <h1>Import from Excel</h1>
+      </div>
+      <div class="steps" id="import-steps">
+        <div class="step current" data-step="1">1. Upload</div>
+        <div class="step" data-step="2">2. Map columns</div>
+        <div class="step" data-step="3">3. Preview & import</div>
+      </div>
+      <div class="import-body">
+        <div class="import-step-panel active" id="import-step-1">
+          <div class="detail-card" style="margin-bottom:16px;border-color:var(--active)">
+            <div class="card-head">Sample template (like Zoho Inventory)</div>
+            <div class="card-body" style="font-size:12px;line-height:1.65">
+              <p><strong>One row = one laptop.</strong> Download our sample, replace with your stock, keep the header row.</p>
+              <p style="margin-top:8px"><strong>Columns in sample:</strong> Model, Brand, CPU, RAM, Storage, Serial, Cost, Rate, Condition, Supplier_Lot</p>
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                <a class="btn primary sm" href="sample-inventory-import.csv" download="Dubai_Plaza_Inventory_Import_Sample.csv">Download sample CSV</a>
+                <a class="btn sm" href="INVENTORY_IMPORT_README.txt" download target="_blank">Import instructions</a>
+              </div>
+            </div>
+          </div>
+          <div class="dropzone">
+            <p><strong>Choose Excel / CSV file</strong></p>
+            <p style="font-size:12px;margin-top:8px">.xlsx, .xls, .csv — processed in your browser (demo)</p>
+            <input type="file" id="excel-file" accept=".xlsx,.xls,.csv" style="margin-top:16px">
+          </div>
+        </div>
+        <div class="import-step-panel" id="import-step-2">
+          <div class="detail-card">
+            <div class="card-head">Column mapping</div>
+            <div class="card-body"><table class="data" id="mapping-table"><tbody></tbody></table></div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button type="button" class="btn" id="import-back-2">Back</button>
+            <button type="button" class="btn primary" id="import-next-2">Preview</button>
+          </div>
+        </div>
+        <div class="import-step-panel" id="import-step-3">
+          <div class="detail-card">
+            <div class="card-head">Preview (<span id="import-count">0</span> rows)</div>
+            <div class="card-body">
+              <table class="data" id="preview-table"><thead></thead><tbody></tbody></table>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button type="button" class="btn" id="import-back-3">Back</button>
+            <button type="button" class="btn primary" id="import-confirm">Import into stock</button>
+          </div>
+        </div>
+      </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALES LIST (large module) -->
+    <section class="view" id="view-sales">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><div class="breadcrumb">Sales / Invoices</div><h1>All sales</h1></div><button class="btn primary" data-goto="sales-new">+ New sale</button><button class="btn">Export</button></div>
+          <div class="summary-strip">
+            <div class="cell"><span>Today</span><strong id="sales-sum-today">—</strong></div>
+            <div class="cell"><span>This month</span><strong>₨ 1.28M</strong></div>
+            <div class="cell"><span>Invoices count</span><strong id="sales-sum-count">—</strong></div>
+            <div class="cell"><span>Udhaar on sales</span><strong id="sales-sum-udhaar">—</strong></div>
+            <div class="cell"><span>Returns (month)</span><strong>3</strong></div>
+          </div>
+          <div class="toolbar">
+            <span class="filter-pill">Date range ▾</span>
+            <span class="filter-pill">Payment: All ▾</span>
+            <span class="filter-pill">Staff ▾</span>
+            <span class="filter-pill">Customer ▾</span>
+            <div class="spacer"></div>
+            <input placeholder="Bill #, customer, item…" style="padding:6px 10px;border:1px solid var(--border);border-radius:4px;width:220px">
+          </div>
+          <div class="table-wrap flush">
+            <table class="data">
+              <thead><tr><th>Bill #</th><th>Date</th><th>Customer</th><th>Item / ID</th><th>Staff</th><th>Amount</th><th>Paid</th><th>Udhaar</th><th>Profit</th><th>QR</th><th>Status</th></tr></thead>
+              <tbody id="sales-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW SALE (large POS) -->
+    <section class="view" id="view-sales-new">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><div class="breadcrumb">Sales / POS</div><h1>New sale — counter checkout</h1></div></div>
+          <div class="pos" style="flex:1">
+            <div class="pos-left">
+              <div class="tabs pos-tabs" id="pos-tabs">
+                <button type="button" class="on" data-pos-tab="laptops">Laptops</button>
+                <button type="button" data-pos-tab="accessories">Accessories</button>
+                <button type="button" data-pos-tab="recent">Recent sold</button>
+              </div>
+              <div id="pos-panel-laptops">
+                <div class="pos-search-bar"><span class="ico-search" aria-hidden="true">⌕</span><input id="pos-search" type="search" placeholder="Search laptop by model, spec, LP-ID…" autocomplete="off"></div>
+                <div id="sale-cart"></div>
+              </div>
+              <div id="pos-panel-accessories" hidden>
+                <div class="pos-search-bar"><span class="ico-search">⌕</span><input id="pos-acc-search" type="search" placeholder="Search charger, RAM, SSD…"></div>
+                <div id="pos-accessory-list"></div>
+              </div>
+              <div id="pos-panel-recent" hidden>
+                <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Recently sold units — tap to view bill</p>
+                <div id="pos-recent-list"></div>
+              </div>
+              <div class="detail-card" style="margin-top:16px"><div class="card-head">Sale notes & warranty</div><div class="card-body">
+                <div class="field-row"><label>Warranty days</label><input value="30" style="width:80px;padding:6px;border:1px solid var(--border);border-radius:4px"></div>
+                <div class="field-row"><label>Internal note</label><textarea rows="2" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" placeholder="Optional…"></textarea></div>
+              </div></div>
+            </div>
+            <div class="pos-right wide">
+              <label style="font-size:11px;color:var(--muted)">CUSTOMER</label>
+              <input id="sale-customer" list="customer-list" placeholder="Search or type name…" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px">
+              <datalist id="customer-list"></datalist>
+              <div style="display:flex;gap:6px"><button type="button" class="btn sm" data-goto="customers-new">+ New</button><button type="button" class="btn sm" data-goto="customer-detail">Ledger</button></div>
+              <div class="detail-card"><div class="card-body" style="font-size:12px"><div class="amount-row"><span>Customer balance</span><span id="pos-cust-bal">—</span></div><div class="amount-row"><span>Credit limit</span><span>₨ 100,000</span></div></div></div>
+              <hr style="border:none;border-top:1px solid var(--border);width:100%">
+              <div class="amount-row"><span>Subtotal</span><span id="sale-subtotal">0</span></div>
+              <div class="amount-row"><span>Discount</span><input id="sale-discount" value="0" style="width:70px;padding:4px;border:1px solid var(--border);border-radius:4px;text-align:right"></div>
+              <div class="amount-row"><span>Tax (optional)</span><input value="0" style="width:70px;padding:4px;border:1px solid var(--border);border-radius:4px;text-align:right"></div>
+              <div class="amount-row total"><span>Total</span><span id="sale-total">0</span></div>
+              <label style="font-size:11px;color:var(--muted)">PAYMENT MODE</label>
+              <select id="sale-pay-mode" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"><option>Full cash</option><option>Partial + Udhaar</option><option>Full Udhaar</option><option>Bank transfer</option></select>
+              <div class="amount-row"><span>Paid now</span><input id="sale-paid" value="0" style="width:90px;padding:4px;border:1px solid var(--border);border-radius:4px;text-align:right"></div>
+              <div class="amount-row"><span>Balance (Udhaar)</span><strong id="sale-balance">0</strong></div>
+              <div class="amount-row"><span>Est. profit</span><span id="sale-profit">—</span></div>
+              <button type="button" class="btn primary" id="btn-complete-sale" style="width:100%;padding:14px;margin-top:auto;font-size:14px">Complete sale & generate QR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-sales-returns">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Returns & refunds</h1></div><button class="btn primary">+ Start return</button></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Return #</th><th>Date</th><th>Original bill</th><th>Customer</th><th>Item</th><th>Refund</th><th>Restock</th><th>Reason</th></tr></thead>
+          <tbody><tr><td>RT-12</td><td>04-Oct</td><td>#1070</td><td>Walk-in</td><td>LP-990</td><td>35,000</td><td><span class="tag green">Yes</span></td><td>Battery issue</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-sales-payments">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Collect payment (against Udhaar)</h1></div></div>
+          <div class="grid-2col" style="padding:20px;flex:1">
+            <div class="detail-card"><div class="card-head">Receive payment</div><div class="card-body">
+              <div class="field-row"><label>Customer</label><select id="pay-customer" style="width:100%;padding:8px"></select></div>
+              <div class="field-row"><label>Amount</label><input id="pay-amount" type="number" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+              <div class="field-row"><label>Method</label><select style="width:100%;padding:8px"><option>Cash</option><option>Bank</option></select></div>
+              <button type="button" class="btn primary" id="btn-record-payment">Record payment</button>
+            </div></div>
+            <div class="detail-card"><div class="card-head">Open invoices (selected customer)</div><div class="card-body"><table class="data"><thead><tr><th>Bill</th><th>Balance</th></tr></thead><tbody id="pay-open-bills"></tbody></table></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECEIPT + QR (full width) -->
+    <section class="view" id="view-sales-receipt">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div class="breadcrumb"><a data-goto="sales">Sales</a> / Invoice</div><h1 id="receipt-title">Invoice</h1><button class="btn" onclick="window.print()">Print</button><button class="btn">WhatsApp (V2)</button><button class="btn primary" id="btn-regen-qr">Regenerate QR</button></div>
+          <div class="split" style="flex:1;background:var(--bg)">
+            <div class="split-detail" style="display:flex;align-items:center;justify-content:center">
+              <div class="receipt-sheet" style="width:480px">
+                <div style="font-weight:600;font-size:16px">Dubai Plaza</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px">Tax Invoice / Receipt · QR warranty ref</div>
+                <div class="qr-box" id="qr-box"></div>
+                <div id="receipt-details" style="font-size:12px;text-align:left;margin-top:16px;line-height:1.7"></div>
+              </div>
+            </div>
+            <div class="split-detail" style="max-width:420px;border-left:1px solid var(--border);background:var(--panel)">
+              <div class="detail-card" style="margin:16px;border:none"><div class="card-head">Line items</div><div class="card-body"><table class="data"><thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr></thead><tbody id="receipt-lines"></tbody></table></div></div>
+              <div class="detail-card" style="margin:16px;border:none"><div class="card-head">Payment breakdown</div><div class="card-body" id="receipt-payments"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMERS LIST (large module) -->
+    <section class="view" id="view-customers">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><div class="breadcrumb">Customers</div><h1>Customer directory</h1></div><button class="btn primary" data-goto="customers-new">+ New customer</button><button class="btn">Import</button></div>
+          <div class="summary-strip">
+            <div class="cell"><span>Total customers</span><strong id="cust-sum-total">—</strong></div>
+            <div class="cell"><span>With Udhaar</span><strong id="cust-sum-due">—</strong></div>
+            <div class="cell"><span>Total receivable</span><strong id="cust-sum-recv">—</strong></div>
+            <div class="cell"><span>Overdue 30+ days</span><strong>8</strong></div>
+            <div class="cell"><span>Top debtor</span><strong>Karachi IT</strong></div>
+          </div>
+          <div class="toolbar">
+            <input id="cust-filter" placeholder="Name, phone, city…" style="padding:7px 12px;border:1px solid var(--border);border-radius:4px;width:240px">
+            <span class="filter-pill">Has balance ▾</span>
+            <span class="filter-pill">City ▾</span>
+            <span class="filter-pill">Sort: Balance ▾</span>
+          </div>
+          <div class="table-wrap flush">
+            <table class="data">
+              <thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Credit limit</th><th>Outstanding</th><th>Last sale</th><th>Last payment</th><th></th></tr></thead>
+              <tbody id="customers-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-customers-overdue">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Overdue Udhaar</h1></div><button class="btn">Send reminder (V2)</button></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Customer</th><th>Phone</th><th>Balance</th><th>Oldest due</th><th>Days</th><th></th></tr></thead><tbody id="overdue-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-customers-new">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>New customer</h1></div></div>
+          <div class="split-detail" style="max-width:720px;padding:20px">
+            <div class="detail-card"><div class="card-head">Contact</div><div class="card-body">
+              <div class="field-row"><label>Business / name *</label><input id="new-cust-name" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+              <div class="field-row"><label>Phone *</label><input id="new-cust-phone" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+              <div class="field-row"><label>City</label><input id="new-cust-city" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+              <div class="field-row"><label>Address</label><textarea id="new-cust-addr" rows="2" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></textarea></div>
+              <div class="field-row"><label>Credit limit</label><input id="new-cust-limit" type="number" value="100000" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+              <button type="button" class="btn primary" id="btn-save-customer">Save customer</button>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMER DETAIL (large split) -->
+    <section class="view" id="view-customer-detail">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><div class="breadcrumb"><a data-goto="customers">Customers</a> / Customer profile / <span id="cd-name-bc">—</span></div><h1 id="cd-name-title">Customer profile</h1></div><button class="btn primary" data-goto="sales-payments" data-pay-ctx="customers">Receive payment</button><button class="btn" data-goto="sales-new">New sale</button><button class="btn">Edit</button></div>
+          <div class="split" style="flex:1">
+            <div class="split-list wide">
+              <div class="list-search"><input id="cd-list-filter" placeholder="Find customer…"></div>
+              <div class="list-items" id="cd-list-items"></div>
+            </div>
+            <div class="split-detail">
+              <div class="summary-strip" style="grid-template-columns:repeat(4,1fr)">
+                <div class="cell"><span>Outstanding</span><strong id="cd-out">—</strong></div>
+                <div class="cell"><span>Lifetime sales</span><strong id="cd-sales-count">—</strong></div>
+                <div class="cell"><span>Credit limit</span><strong id="cd-limit">—</strong></div>
+                <div class="cell"><span>Available credit</span><strong id="cd-avail">—</strong></div>
+              </div>
+              <div class="tabs"><button type="button" class="on">Ledger (Khata)</button><button type="button">Sales history</button><button type="button">Payments</button><button type="button">Contact & notes</button></div>
+              <div class="table-wrap flush" style="margin:0"><table class="data"><thead><tr><th>Date</th><th>Type</th><th>Reference</th><th>Debit</th><th>Credit</th><th>Balance</th><th>By</th></tr></thead><tbody id="cd-ledger"></tbody></table></div>
+              <div class="detail-card" style="margin:16px"><div class="card-head">Contact</div><div class="card-body" id="cd-contact"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNTS (large module) -->
+    <section class="view" id="view-accounts">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><div class="breadcrumb">Accounts / Overview</div><h1>Financial overview</h1></div><button type="button" class="btn" data-goto="accounts-export">Export</button></div>
+          <div class="summary-strip">
+            <div class="cell"><span>Cash collected (sales)</span><strong id="acc-cash-in">—</strong></div>
+            <div class="cell"><span>Total Udhaar</span><strong id="acc-receivables">—</strong></div>
+            <div class="cell"><span>Realized profit</span><strong id="acc-profit">—</strong></div>
+            <div class="cell"><span>Stock value (cost)</span><strong id="acc-stock-val">—</strong></div>
+            <div class="cell"><span>Sales count</span><strong id="acc-sale-count">—</strong></div>
+          </div>
+          <div class="grid-2col" style="padding:16px;flex:1">
+            <div class="panel-box"><div class="ph-head">Cash vs Udhaar (this month)</div><div class="chart-ph" style="margin:12px;height:140px"><div class="bar" style="height:70%"></div><div class="bar" style="height:45%"></div></div></div>
+            <div class="panel-box"><div class="ph-head">Quick links</div><div style="padding:14px;display:flex;flex-direction:column;gap:8px"><button class="btn sm" data-goto="accounts-cashbook">Open cash book</button><button class="btn sm" data-goto="accounts-receivables">Receivables aging</button><button class="btn sm" data-goto="accounts-profit">Profit detail</button></div></div>
+          </div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Date</th><th>Type</th><th>Reference</th><th>In</th><th>Out</th><th>Notes</th></tr></thead><tbody id="acc-ledger-recent"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-accounts-cashbook">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Cash book</h1></div><button class="btn">+ Cash in/out</button><button class="btn">Export</button></div>
+          <div class="toolbar"><span class="filter-pill">This month ▾</span><span class="filter-pill">Type ▾</span></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Date</th><th>Ref</th><th>Source</th><th>Customer / party</th><th>Cash in</th><th>Cash out</th><th>Balance</th><th>By</th></tr></thead><tbody id="acc-cashbook-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-accounts-receivables">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Receivables (Udhaar)</h1></div><button class="btn primary" data-goto="sales-payments" data-pay-ctx="customers">Collect payment</button></div>
+          <div class="summary-strip"><div class="cell"><span>Total outstanding</span><strong id="acc-recv-total">—</strong></div><div class="cell"><span>Customers with balance</span><strong id="acc-recv-count">—</strong></div><div class="cell"><span>On sales (unpaid)</span><strong id="acc-recv-sales">—</strong></div><div class="cell"><span>Overdue 30+ days</span><strong>8</strong></div><div class="cell"><span>Largest</span><strong id="acc-recv-top">—</strong></div></div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Customer</th><th>Phone</th><th>Balance</th><th>Last sale</th><th>Credit limit</th><th>Available</th><th></th></tr></thead><tbody id="acc-receivables-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-accounts-profit">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Profit & loss (simple)</h1></div><span class="filter-pill">This month ▾</span></div>
+          <div class="dash" style="grid-template-columns:repeat(3,1fr)">
+            <div class="stat-card"><div class="label">Revenue (sales)</div><div class="val" id="acc-pl-revenue">—</div></div>
+            <div class="stat-card"><div class="label">COGS (cost at sale)</div><div class="val" id="acc-pl-cogs">—</div></div>
+            <div class="stat-card"><div class="label">Gross profit</div><div class="val" id="acc-pl-gross">—</div></div>
+          </div>
+          <div class="table-wrap flush"><table class="data"><thead><tr><th>Bill #</th><th>Date</th><th>Item</th><th>Revenue</th><th>Cost</th><th>Profit</th><th>Margin %</th></tr></thead><tbody id="acc-profit-tbody"></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-accounts-export">
+      <div class="module-shell">
+        <aside class="module-subnav" data-subnav-slot></aside>
+        <div class="module-main">
+          <div class="page-head"><div><h1>Export & backup</h1></div></div>
+          <div class="split-detail" style="padding:20px;max-width:640px">
+            <div class="detail-card"><div class="card-head">Owner exports</div><div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+              <button type="button" class="btn" id="btn-export-sales">Download sales CSV (demo)</button>
+              <button type="button" class="btn" id="btn-export-customers">Download customers CSV (demo)</button>
+              <button type="button" class="btn" id="btn-export-stock">Download stock CSV (demo)</button>
+              <p style="font-size:11px;color:var(--muted)">Production: Laravel secured exports with audit log.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="view" id="view-reports">
+      <div class="page-head"><h1>Reports</h1></div>
+      <div style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div class="stat-card clickable" style="cursor:pointer"><strong>Stock aging</strong><p style="font-size:11px;color:var(--muted);margin-top:8px">Unsold laptops by days</p></div>
+        <div class="stat-card"><strong>Sales by period</strong><p style="font-size:11px;color:var(--muted);margin-top:8px">Daily / monthly</p></div>
+        <div class="stat-card"><strong>Low margin units</strong><p style="font-size:11px;color:var(--muted);margin-top:8px">Below threshold</p></div>
+        <div class="stat-card"><strong>Customer outstanding</strong><p style="font-size:11px;color:var(--muted);margin-top:8px">All Udhaar</p></div>
+        <div class="stat-card"><strong>Inventory summary</strong><p style="font-size:11px;color:var(--muted);margin-top:8px">Qty & value</p></div>
+        <div class="stat-card"><strong>Audit log</strong><p style="font-size:11px;color:var(--muted);margin-top:8px">Owner only</p></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings">
+      <div class="page-head"><h1>Settings</h1></div>
+      <div class="split-detail" style="max-width:640px">
+        <div class="detail-card">
+          <div class="card-head">Organization</div>
+          <div class="card-body">
+            <div class="field-row"><label>Shop name</label><input style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" value="Dubai Plaza"></div>
+            <div class="field-row"><label>Default warranty</label><input style="width:80px;padding:8px;border:1px solid var(--border);border-radius:4px" value="30"> days</div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="card-head">Users & roles</div>
+          <div class="card-body">
+            <table class="data"><tr><th>User</th><th>Role</th></tr>
+            <tr><td>Owner</td><td>Owner</td></tr>
+            <tr><td>Counter 1</td><td>Staff</td></tr></table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</div>
+
+<div class="wf-badge" id="wf-badge">INTERACTIVE DEMO · Excel + QR in browser · Real shop = Laravel build</div>
+<div class="toast" id="toast"></div>
+<div class="modal-backdrop" id="modal-adjust-laptop">
+  <div class="modal-panel">
+    <h2 style="font-size:16px;margin-bottom:12px">Adjust cost / rate</h2>
+    <p id="adjust-laptop-label" style="font-size:12px;color:var(--muted);margin-bottom:12px"></p>
+    <div class="field-row"><label>Cost</label><input id="adjust-cost" type="number" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+    <div class="field-row"><label>Rate</label><input id="adjust-rate" type="number" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
+      <button type="button" class="btn" id="modal-adjust-cancel">Cancel</button>
+      <button type="button" class="btn primary" id="modal-adjust-save">Save</button>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop" id="modal-add-laptop">
+  <div class="modal-panel">
+    <h2 style="font-size:16px;margin-bottom:12px">Add single laptop</h2>
+    <div class="field-row"><label>Name</label><input id="add-name" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" placeholder="Dell Latitude 5420"></div>
+    <div class="field-row"><label>CPU</label><input id="add-cpu" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" placeholder="i5"></div>
+    <div class="field-row"><label>RAM</label><input id="add-ram" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" placeholder="8GB"></div>
+    <div class="field-row"><label>Storage</label><input id="add-storage" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px" placeholder="256GB SSD"></div>
+    <div class="field-row"><label>Cost</label><input id="add-cost" type="number" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+    <div class="field-row"><label>Rate</label><input id="add-rate" type="number" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:4px"></div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
+      <button type="button" class="btn" id="modal-add-cancel">Cancel</button>
+      <button type="button" class="btn primary" id="modal-add-save">Save to stock</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/qrcode@1.5.4/build/qrcode.min.js" crossorigin="anonymous"></script>
+<script>
+(function(){
+  const STORAGE_KEY = 'dubaiPlazaDemoV1';
+  const MAP_FIELDS = [
+    { key: 'skip', label: '— Skip —' },
+    { key: 'name', label: 'Item name' },
+    { key: 'cpu', label: 'CPU' },
+    { key: 'ram', label: 'RAM' },
+    { key: 'storage', label: 'Storage' },
+    { key: 'cost', label: 'Cost price' },
+    { key: 'rate', label: 'Selling rate' },
+    { key: 'serial', label: 'Serial' },
+    { key: 'brand', label: 'Brand' },
+    { key: 'lot', label: 'Lot / container' },
+    { key: 'notes', label: 'Notes / condition' }
+  ];
+
+  let importRaw = { headers: [], rows: [] };
+  let importMapping = {};
+  let currentSaleId = null;
+  let selectedLaptopId = 'LP-1042';
+  let selectedCustomerId = 1;
+  let saleDraft = { laptopId: null, rate: 0 };
+
+  function defaultState(){
+    return {
+      nextNum: 1044,
+      nextBill: 1089,
+      nextCust: 3,
+      laptops: [
+        { id: 'LP-1042', name: 'Dell Latitude 5420', cpu: 'i5', ram: '8GB', storage: '256GB SSD', cost: 38500, rate: 45000, status: 'in_stock', lot: 'LOT-12', serial: 'SN-D5420-01', days: 18 },
+        { id: 'LP-1043', name: 'HP ProBook 450 G8', cpu: 'i7', ram: '16GB', storage: '512GB SSD', cost: 52000, rate: 62000, status: 'in_stock', lot: 'LOT-12', serial: '', days: 12 },
+        { id: 'LP-0891', name: 'Lenovo T480', cpu: 'i5', ram: '8GB', storage: '256GB SSD', cost: 30000, rate: 38000, status: 'sold', lot: 'LOT-11', serial: '', days: 0 }
+      ],
+      customers: [
+        { id: 1, name: 'Ahmed Traders', phone: '0300-0000000', city: 'Karachi', address: 'Saddar', balance: 25000, creditLimit: 150000, ledger: [
+          { date: '2026-10-07', type: 'Sale', ref: '#1088', debit: 45000, credit: 0, balance: 25000, by: 'Staff' },
+          { date: '2026-10-07', type: 'Payment', ref: 'RCPT-44', debit: 0, credit: 20000, balance: 25000, by: 'Owner' }
+        ]},
+        { id: 2, name: 'Karachi IT', phone: '0321-0000000', city: 'Karachi', address: '', balance: 85000, creditLimit: 200000, ledger: [] }
+      ],
+      sales: [
+        { id: 1088, date: '2026-10-07', customer: 'Ahmed Traders', customerId: 1, laptopId: 'LP-1042', total: 45000, paid: 20000, balance: 25000, itemName: 'Dell Latitude 5420', itemId: 'LP-1042', costAtSale: 38500, staff: 'Counter 1' }
+      ]
+    };
+  }
+
+  function loadState(){
+    try {
+      const s = localStorage.getItem(STORAGE_KEY);
+      return s ? JSON.parse(s) : defaultState();
+    } catch { return defaultState(); }
+  }
+  let state = loadState();
+  if(!state.customers){ const d = defaultState(); state.customers = d.customers; state.nextCust = d.nextCust; }
+  if(!state.nextCust) state.nextCust = 3;
+  state.laptops.forEach(l => { if(!l.lot) l.lot = 'LOT-12'; if(l.days === undefined) l.days = 0; });
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+  const views = document.querySelectorAll('.view');
+  const navButtons = document.querySelectorAll('#nav button[data-view]');
+  let paymentContext = 'sales';
+
+  const MODULE_SUBNAV = {
+    inventory: [
+      { id: 'inventory', label: 'All laptops' },
+      { id: 'inventory-lots', label: 'Lots / containers' },
+      { id: 'inventory-import', label: 'Excel import' },
+      { id: 'inventory-accessories', label: 'Accessories' },
+      { id: 'inventory-adjust', label: 'Stock adjustments' },
+      { id: 'inventory-detail', label: 'Item detail' }
+    ],
+    sales: [
+      { id: 'sales', label: 'All invoices' },
+      { id: 'sales-new', label: 'New sale (POS)' },
+      { id: 'sales-returns', label: 'Returns & refunds' },
+      { id: 'sales-payments', label: 'Collect payment', payCtx: 'sales' },
+      { id: 'sales-receipt', label: 'Receipt / QR' }
+    ],
+    customers: [
+      { id: 'customers', label: 'All customers' },
+      { id: 'customer-detail', label: 'Customer profile' },
+      { id: 'customers-overdue', label: 'Overdue Udhaar' },
+      { id: 'customers-new', label: 'New customer' },
+      { id: 'sales-payments', label: 'Receive payment', payCtx: 'customers' }
+    ],
+    accounts: [
+      { id: 'accounts', label: 'Overview' },
+      { id: 'accounts-cashbook', label: 'Cash book' },
+      { id: 'accounts-receivables', label: 'Receivables' },
+      { id: 'accounts-profit', label: 'Profit & loss' },
+      { id: 'accounts-export', label: 'Export' }
+    ]
+  };
+
+  function mainNavForView(viewId){
+    if(viewId === 'sales-payments') return paymentContext === 'customers' ? 'customers' : 'sales';
+    const parent = {
+      'inventory-detail': 'inventory', 'inventory-lots': 'inventory', 'inventory-import': 'inventory',
+      'inventory-accessories': 'inventory', 'inventory-adjust': 'inventory',
+      'sales-new': 'sales', 'sales-returns': 'sales', 'sales-receipt': 'sales',
+      'customer-detail': 'customers', 'customers-overdue': 'customers', 'customers-new': 'customers',
+      'accounts-cashbook': 'accounts', 'accounts-receivables': 'accounts', 'accounts-profit': 'accounts', 'accounts-export': 'accounts'
+    };
+    return parent[viewId] || viewId;
+  }
+
+  function moduleForView(viewId){
+    if(viewId === 'sales-payments') return paymentContext;
+    if(viewId.startsWith('inventory')) return 'inventory';
+    if(viewId.startsWith('sales') || viewId === 'sales-receipt') return 'sales';
+    if(viewId === 'customers' || viewId.startsWith('customer')) return 'customers';
+    if(viewId.startsWith('accounts')) return 'accounts';
+    return null;
+  }
+
+  function paintSubnav(activeViewId){
+    const mod = moduleForView(activeViewId);
+    const viewEl = document.getElementById('view-' + activeViewId);
+    const slot = viewEl?.querySelector('[data-subnav-slot]');
+    if(!mod || !slot || !MODULE_SUBNAV[mod]) return;
+    slot.innerHTML = MODULE_SUBNAV[mod].map(it => {
+      const on = it.id === activeViewId ? ' class="on"' : '';
+      const pay = it.payCtx ? ` data-pay-ctx="${it.payCtx}"` : '';
+      return `<button type="button" data-goto="${it.id}"${pay}${on}>${it.label}</button>`;
+    }).join('');
+  }
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  function showView(id){
+    if(id === 'customer-detail' && !state.customers.length){ toast('Add a customer first'); id = 'customers-new'; }
+    if(id === 'inventory-detail' && !state.laptops.length){ toast('No stock yet'); id = 'inventory'; }
+    views.forEach(v => v.classList.remove('active'));
+    const el = document.getElementById('view-' + id);
+    if(el) el.classList.add('active');
+    const mainNav = mainNavForView(id);
+    navButtons.forEach(b => b.classList.toggle('active', b.dataset.view === mainNav));
+    paintSubnav(id);
+    if(id === 'inventory') renderInventory();
+    if(id === 'inventory-detail') renderInventoryDetail(selectedLaptopId);
+    if(id === 'sales') renderSalesList();
+    if(id === 'sales-new') { switchPosTab('laptops'); renderSaleCart(); fillCustomerDatalist(); renderPosAccessories(); renderPosRecent(); }
+    if(id === 'inventory-import') setImportStep(1);
+    if(id === 'customers' || id === 'customers-overdue') renderCustomersList();
+    if(id === 'customer-detail') renderCustomerDetail(selectedCustomerId);
+    if(id === 'sales-payments'){
+      renderPaymentForm();
+      const payH1 = document.querySelector('#view-sales-payments .page-head h1');
+      if(payH1) payH1.textContent = paymentContext === 'customers'
+        ? 'Receive payment (customer Khata)'
+        : 'Collect payment (sales Udhaar)';
+    }
+    if(id === 'sales-receipt'){
+      if(!state.sales.length){ paintEmptyReceipt(); return; }
+      const valid = currentSaleId && state.sales.some(s => s.id === currentSaleId);
+      const sid = valid ? currentSaleId : state.sales[state.sales.length - 1].id;
+      fillReceiptView(sid);
+      setTimeout(() => renderQr(receiptQrText(sid)), 50);
+    }
+    if(id.startsWith('accounts')) renderAccounts(id);
+  }
+  window.showView = showView;
+
+  function spec(l){ return [l.cpu, l.ram, l.storage].filter(Boolean).join(' · '); }
+  function fmt(n){ return Number(n||0).toLocaleString('en-PK'); }
+  function margin(l){ return l.rate && l.cost ? l.rate - l.cost : 0; }
+
+  function invFilterQuery(){
+    return (document.getElementById('inv-filter-q')?.value || '').toLowerCase().trim();
+  }
+
+  function renderInventory(){
+    const tb = document.getElementById('inventory-tbody');
+    if(!tb) return;
+    const q = invFilterQuery();
+    const rows = state.laptops.filter(l => !q || l.name.toLowerCase().includes(q) || l.id.toLowerCase().includes(q) || spec(l).toLowerCase().includes(q));
+    const inStock = state.laptops.filter(l => l.status === 'in_stock');
+    document.getElementById('sum-in-stock').textContent = inStock.length;
+    document.getElementById('sum-stock-val').textContent = '₨ ' + fmt(inStock.reduce((s,l)=>s+(l.cost||0),0));
+    tb.innerHTML = rows.map(l => {
+      const st = l.status === 'in_stock' ? '<span class="tag green">In stock</span>' : '<span class="tag gray">Sold</span>';
+      const mg = l.status === 'in_stock' ? fmt(margin(l)) : '—';
+      return `<tr class="clickable" data-lid="${l.id}"><td><input type="checkbox"></td><td>${l.id}</td><td>${escapeHtml(l.name)}</td><td>${escapeHtml(spec(l))}</td><td>${escapeHtml(l.serial||'—')}</td><td>${l.lot||'—'}</td><td>${l.days??'—'}</td><td>${fmt(l.cost)}</td><td>${fmt(l.rate)}</td><td>${mg}</td><td>${st}</td><td><button type="button" class="btn sm" data-sell="${l.id}">Sell</button></td></tr>`;
+    }).join('');
+    tb.querySelectorAll('tr').forEach(tr => tr.addEventListener('click', e => {
+      if(e.target.closest('input,button')) return;
+      selectedLaptopId = tr.dataset.lid;
+      showView('inventory-detail');
+    }));
+    tb.querySelectorAll('[data-sell]').forEach(b => b.addEventListener('click', e => {
+      e.stopPropagation();
+      saleDraft.laptopId = b.dataset.sell;
+      showView('sales-new');
+      renderSaleCart();
+    }));
+  }
+
+  let detTab = 'overview';
+
+  function switchDetTab(tab){
+    detTab = tab;
+    document.querySelectorAll('#det-tabs [data-det-tab]').forEach(b =>
+      b.classList.toggle('on', b.dataset.detTab === tab));
+    ['overview','history','sales','lot','notes'].forEach(t => {
+      const p = document.getElementById('det-panel-' + t);
+      if(p) p.hidden = t !== tab;
+    });
+  }
+
+  function renderInventoryDetail(lid){
+    selectedLaptopId = lid || selectedLaptopId;
+    const l = state.laptops.find(x => x.id === selectedLaptopId) || state.laptops[0];
+    if(!l) return;
+    document.getElementById('det-title').textContent = l.name;
+    document.getElementById('det-breadcrumb-id').textContent = l.id;
+    document.getElementById('det-id-block').innerHTML = `
+      <div class="field-row"><label>Item ID</label><div>${l.id}</div></div>
+      <div class="field-row"><label>Serial</label><div>${escapeHtml(l.serial||'—')}</div></div>
+      <div class="field-row field-row--wrap"><label>Configuration</label><div>${escapeHtml(spec(l))}</div></div>
+      <div class="field-row"><label>Status</label><div>${l.status === 'in_stock' ? 'In stock' : 'Sold'}${l.defective ? ' · <span class="tag">Defective</span>' : ''}</div></div>
+      <div class="field-row"><label>Lot</label><div>${l.lot||'—'}</div></div>`;
+    document.getElementById('det-price-block').innerHTML = `
+      <div class="field-row"><label>Cost</label><div>₨ ${fmt(l.cost)}</div></div>
+      <div class="field-row"><label>Rate</label><div>₨ ${fmt(l.rate)}</div></div>
+      <div class="field-row"><label>Margin</label><div>₨ ${fmt(margin(l))}</div></div>
+      <div class="field-row"><label>Days in stock</label><div>${l.days??'—'}</div></div>`;
+    const tl = document.getElementById('det-timeline');
+    if(tl){
+      const rows = [{ date: '—', event: 'Created / imported', user: 'Owner', detail: l.lot || 'MANUAL' }];
+      if(l.status === 'sold'){
+        const sale = state.sales.find(s => s.laptopId === l.id || s.itemId === l.id);
+        if(sale) rows.push({ date: sale.date, event: 'Sold', user: sale.staff||'Staff', detail: 'Bill #' + sale.id });
+      }
+      tl.innerHTML = rows.map(r => `<tr><td>${r.date}</td><td>${r.event}</td><td>${r.user}</td><td>${escapeHtml(String(r.detail))}</td></tr>`).join('');
+    }
+    const hist = document.getElementById('det-history-body');
+    if(hist) hist.innerHTML = `
+      <tr><td>—</td><td>Received</td><td>Added to stock (${l.lot||'MANUAL'})</td></tr>
+      ${l.status==='sold' ? '<tr><td>—</td><td>Sold</td><td>Unit marked sold</td></tr>' : ''}`;
+    const salesBody = document.getElementById('det-sales-body');
+    if(salesBody){
+      const sale = state.sales.find(s => s.laptopId === l.id || s.itemId === l.id);
+      salesBody.innerHTML = sale
+        ? `<p>Bill <strong>#${sale.id}</strong> · ${sale.date} · ${escapeHtml(sale.customer)} · ₨ ${fmt(sale.total)}</p>
+           <button type="button" class="btn primary" id="det-open-bill">Open invoice & QR</button>`
+        : '<p style="color:var(--muted)">Not sold yet. Use <strong>Sell unit</strong> above.</p>';
+      document.getElementById('det-open-bill')?.addEventListener('click', () => openReceipt(sale.id));
+    }
+    const lotBody = document.getElementById('det-lot-body');
+    if(lotBody) lotBody.innerHTML = `
+      <div class="field-row"><label>Lot ID</label><div>${l.lot||'MANUAL'}</div></div>
+      <div class="field-row"><label>Source</label><div>${l.lot === 'MANUAL' ? 'Single add' : 'Excel import'}</div></div>
+      <button type="button" class="btn sm" data-goto="inventory-import">Open Excel import</button>
+      <button type="button" class="btn sm" data-goto="inventory-lots">All lots</button>`;
+    const notesIn = document.getElementById('det-notes-input');
+    if(notesIn) notesIn.value = l.notes || '';
+    const q = (document.getElementById('det-list-filter')?.value || '').toLowerCase().trim();
+    const filtered = state.laptops.filter(x => !q || x.id.toLowerCase().includes(q) || x.name.toLowerCase().includes(q));
+    const list = document.getElementById('det-list-items');
+    list.innerHTML = filtered.map(x => `<div class="list-item ${x.id===l.id?'on':''}" data-lid="${x.id}"><strong>${x.id}</strong><br><span style="font-size:11px;color:var(--muted)">${escapeHtml(x.name)}</span></div>`).join('');
+    list.querySelectorAll('.list-item').forEach(li => li.addEventListener('click', () => renderInventoryDetail(li.dataset.lid)));
+    switchDetTab(detTab);
+  }
+
+  document.getElementById('det-tabs')?.addEventListener('click', e => {
+    const b = e.target.closest('[data-det-tab]');
+    if(b) switchDetTab(b.dataset.detTab);
+  });
+
+  document.getElementById('det-sell-btn')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(!l) return;
+    if(l.status !== 'in_stock'){ toast('Already sold'); return; }
+    saleDraft.laptopId = l.id;
+    showView('sales-new');
+    renderSaleCart();
+  });
+
+  document.getElementById('det-adjust-btn')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(!l) return;
+    document.getElementById('adjust-laptop-label').textContent = l.id + ' — ' + l.name;
+    document.getElementById('adjust-cost').value = l.cost || 0;
+    document.getElementById('adjust-rate').value = l.rate || 0;
+    document.getElementById('modal-adjust-laptop').classList.add('open');
+  });
+  document.getElementById('modal-adjust-cancel')?.addEventListener('click', () =>
+    document.getElementById('modal-adjust-laptop').classList.remove('open'));
+  document.getElementById('modal-adjust-save')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(!l) return;
+    l.cost = Number(document.getElementById('adjust-cost').value) || 0;
+    l.rate = Number(document.getElementById('adjust-rate').value) || 0;
+    saveState();
+    document.getElementById('modal-adjust-laptop').classList.remove('open');
+    renderInventoryDetail(l.id);
+    toast('Cost & rate updated');
+  });
+
+  document.getElementById('det-print-btn')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(!l) return;
+    const w = window.open('', '_blank', 'width=320,height=420');
+    if(!w){ toast('Allow popups to print label'); return; }
+    w.document.write(`<html><head><title>Label ${l.id}</title></head><body style="font-family:sans-serif;padding:16px">
+      <h2 style="margin:0 0 8px">Dubai Plaza</h2>
+      <p><strong>${escapeHtml(l.name)}</strong><br>${escapeHtml(spec(l))}<br>ID: ${l.id}<br>Rate: ₨ ${fmt(l.rate)}</p>
+      </body></html>`);
+    w.document.close();
+    w.focus();
+    w.print();
+  });
+
+  document.getElementById('det-more-btn')?.addEventListener('click', e => {
+    e.stopPropagation();
+    document.getElementById('det-more-menu')?.classList.toggle('open');
+  });
+  document.getElementById('det-mark-defect')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(l){ l.defective = !l.defective; saveState(); renderInventoryDetail(l.id); toast(l.defective ? 'Marked defective' : 'Defect cleared'); }
+    document.getElementById('det-more-menu')?.classList.remove('open');
+  });
+  document.getElementById('det-duplicate')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(!l) return;
+    const copy = { ...l, id: nextLaptopId(), status: 'in_stock', notes: (l.notes||'') + ' (copy)' };
+    state.laptops.push(copy);
+    saveState();
+    renderInventoryDetail(copy.id);
+    toast('Duplicate created ' + copy.id);
+    document.getElementById('det-more-menu')?.classList.remove('open');
+  });
+  document.getElementById('det-notes-save')?.addEventListener('click', () => {
+    const l = state.laptops.find(x => x.id === selectedLaptopId);
+    if(l){
+      l.notes = document.getElementById('det-notes-input').value.trim();
+      saveState();
+      toast('Notes saved');
+    }
+  });
+  document.getElementById('det-list-filter')?.addEventListener('input', () => renderInventoryDetail(selectedLaptopId));
+
+  function renderSalesList(){
+    const tb = document.getElementById('sales-tbody');
+    if(!tb) return;
+    document.getElementById('sales-sum-count').textContent = state.sales.length;
+    const udhaar = state.sales.reduce((s,x)=>s+(x.balance||0),0);
+    document.getElementById('sales-sum-udhaar').textContent = '₨ ' + fmt(udhaar);
+    const today = new Date().toISOString().slice(0,10);
+    const todaySum = state.sales.filter(s=>s.date===today).reduce((s,x)=>s+x.total,0);
+    document.getElementById('sales-sum-today').textContent = '₨ ' + fmt(todaySum);
+    tb.innerHTML = state.sales.slice().reverse().map(s => {
+      const profit = (s.total||0) - (s.costAtSale||0);
+      return `<tr class="clickable" data-sale="${s.id}"><td>${s.id}</td><td>${s.date}</td><td>${escapeHtml(s.customer)}</td><td>${escapeHtml(s.itemName)} · ${s.itemId}</td><td>${s.staff||'—'}</td><td>${fmt(s.total)}</td><td>${fmt(s.paid)}</td><td>${fmt(s.balance)}</td><td>${fmt(profit)}</td><td><span class="tag">QR</span></td><td><span class="tag green">Posted</span></td></tr>`;
+    }).join('');
+    tb.querySelectorAll('tr').forEach(tr => tr.addEventListener('click', () => openReceipt(Number(tr.dataset.sale))));
+  }
+
+  function fillCustomerDatalist(){
+    const dl = document.getElementById('customer-list');
+    if(dl) dl.innerHTML = state.customers.map(c => `<option value="${escapeHtml(c.name)}">`).join('');
+  }
+
+  function renderCustomersList(){
+    const tb = document.getElementById('customers-tbody');
+    const od = document.getElementById('overdue-tbody');
+    const q = (document.getElementById('cust-filter')?.value || '').toLowerCase().trim();
+    const list = state.customers.filter(c => !q || c.name.toLowerCase().includes(q) || c.phone.includes(q));
+    document.getElementById('cust-sum-total').textContent = state.customers.length;
+    document.getElementById('cust-sum-due').textContent = state.customers.filter(c=>c.balance>0).length;
+    document.getElementById('cust-sum-recv').textContent = '₨ ' + fmt(state.customers.reduce((s,c)=>s+c.balance,0));
+    if(tb) tb.innerHTML = list.map(c => `<tr class="clickable" data-cid="${c.id}"><td>${escapeHtml(c.name)}</td><td>${c.phone}</td><td>${escapeHtml(c.city||'—')}</td><td>${fmt(c.creditLimit)}</td><td><strong>${fmt(c.balance)}</strong></td><td>—</td><td>—</td><td><button class="btn sm">Open</button></td></tr>`).join('');
+    tb?.querySelectorAll('tr').forEach(tr => tr.addEventListener('click', e => {
+      if(e.target.closest('button')) e.stopPropagation();
+      selectedCustomerId = Number(tr.dataset.cid);
+      showView('customer-detail');
+    }));
+    if(od) od.innerHTML = state.customers.filter(c=>c.balance>0).map(c => `<tr class="clickable" data-cid="${c.id}"><td>${escapeHtml(c.name)}</td><td>${c.phone}</td><td>${fmt(c.balance)}</td><td>01-Sep</td><td>36</td><td><button type="button" class="btn sm" data-goto="sales-payments" data-pay-ctx="customers">Collect</button></td></tr>`).join('');
+    od?.querySelectorAll('tr.clickable').forEach(tr => tr.addEventListener('click', e => {
+      if(e.target.closest('button')) return;
+      selectedCustomerId = Number(tr.dataset.cid);
+      showView('customer-detail');
+    }));
+  }
+
+  function renderCustomerDetail(cid){
+    selectedCustomerId = cid || selectedCustomerId;
+    const c = state.customers.find(x => x.id === selectedCustomerId) || state.customers[0];
+    if(!c) return;
+    document.getElementById('cd-name-title').textContent = c.name + ' — profile';
+    document.getElementById('cd-name-bc').textContent = c.name;
+    document.getElementById('cd-out').textContent = '₨ ' + fmt(c.balance);
+    document.getElementById('cd-limit').textContent = '₨ ' + fmt(c.creditLimit);
+    document.getElementById('cd-avail').textContent = '₨ ' + fmt(Math.max(0, c.creditLimit - c.balance));
+    document.getElementById('cd-sales-count').textContent = state.sales.filter(s=>s.customerId===c.id || s.customer===c.name).length;
+    document.getElementById('cd-contact').innerHTML = `Phone: ${c.phone}<br>City: ${escapeHtml(c.city||'—')}<br>${escapeHtml(c.address||'')}`;
+    const led = c.ledger && c.ledger.length ? c.ledger : state.sales.filter(s=>s.customer===c.name).map(s=>({date:s.date,type:'Sale',ref:'#'+s.id,debit:s.total,credit:s.paid,balance:s.balance,by:'Staff'}));
+    document.getElementById('cd-ledger').innerHTML = led.map(r => `<tr><td>${r.date}</td><td>${r.type}</td><td>${r.ref}</td><td>${r.debit?fmt(r.debit):'—'}</td><td>${r.credit?fmt(r.credit):'—'}</td><td>${fmt(r.balance)}</td><td>${r.by||'—'}</td></tr>`).join('');
+    const list = document.getElementById('cd-list-items');
+    list.innerHTML = state.customers.map(x => `<div class="list-item ${x.id===c.id?'on':''}" data-cid="${x.id}"><strong>${escapeHtml(x.name)}</strong><br><span style="font-size:11px;color:var(--muted)">₨ ${fmt(x.balance)}</span></div>`).join('');
+    list.querySelectorAll('.list-item').forEach(li => li.addEventListener('click', () => renderCustomerDetail(Number(li.dataset.cid))));
+  }
+
+  function renderPaymentForm(){
+    const sel = document.getElementById('pay-customer');
+    if(!sel) return;
+    sel.innerHTML = state.customers.map(c => `<option value="${c.id}">${escapeHtml(c.name)} (₨ ${fmt(c.balance)})</option>`).join('');
+    sel.onchange = updateOpenBills;
+    updateOpenBills();
+  }
+  function updateOpenBills(){
+    const cid = Number(document.getElementById('pay-customer')?.value);
+    const c = state.customers.find(x=>x.id===cid);
+    const tb = document.getElementById('pay-open-bills');
+    if(!tb) return;
+    tb.innerHTML = state.sales.filter(s=>s.customerId===cid || (c && s.customer===c.name)).filter(s=>s.balance>0).map(s=>`<tr><td>#${s.id}</td><td>${fmt(s.balance)}</td></tr>`).join('') || '<tr><td colspan="2">No open balance</td></tr>';
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function nextLaptopId(){
+    const id = 'LP-' + state.nextNum;
+    state.nextNum++;
+    return id;
+  }
+
+  function setImportStep(n){
+    [1,2,3].forEach(i => {
+      document.getElementById('import-step-' + i)?.classList.toggle('active', i === n);
+      document.querySelector('#import-steps .step[data-step="'+i+'"]')?.classList.toggle('current', i === n);
+      document.querySelector('#import-steps .step[data-step="'+i+'"]')?.classList.toggle('done', i < n);
+    });
+  }
+
+  function guessMap(header){
+    const h = header.toLowerCase();
+    if(/model|name|item|laptop/.test(h)) return 'name';
+    if(/cpu|processor|gen/.test(h)) return 'cpu';
+    if(/ram|memory/.test(h)) return 'ram';
+    if(/ssd|storage|disk|hdd/.test(h)) return 'storage';
+    if(/cost|purchase/.test(h)) return 'cost';
+    if(/rate|price|sell|mrp/.test(h)) return 'rate';
+    if(/serial|imei/.test(h)) return 'serial';
+    if(/brand|make|manufacturer/.test(h)) return 'brand';
+    if(/lot|container|supplier|batch/.test(h)) return 'lot';
+    if(/condition|note|defect|remark/.test(h)) return 'notes';
+    return 'skip';
+  }
+
+  document.getElementById('excel-file')?.addEventListener('change', async e => {
+    const file = e.target.files?.[0];
+    if(!file) return;
+    const data = await file.arrayBuffer();
+    const wb = XLSX.read(data, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+    if(json.length < 2){ toast('File empty or no data rows'); return; }
+    importRaw.headers = json[0].map(String);
+    importRaw.rows = json.slice(1).filter(r => r.some(c => String(c).trim() !== ''));
+    importMapping = {};
+    importRaw.headers.forEach(h => { importMapping[h] = guessMap(h); });
+    buildMappingTable();
+    setImportStep(2);
+    toast('Loaded ' + importRaw.rows.length + ' rows');
+  });
+
+  function buildMappingTable(){
+    const tb = document.querySelector('#mapping-table tbody');
+    tb.innerHTML = importRaw.headers.map((h, idx) => {
+      const opts = MAP_FIELDS.map(f => `<option value="${f.key}" ${importMapping[h]===f.key?'selected':''}>${f.label}</option>`).join('');
+      return `<tr><td>${escapeHtml(h)}</td><td><select data-idx="${idx}">${opts}</select></td></tr>`;
+    }).join('');
+    tb.querySelectorAll('select').forEach(sel => sel.addEventListener('change', () => {
+      importMapping[importRaw.headers[Number(sel.dataset.idx)]] = sel.value;
+    }));
+  }
+
+  document.getElementById('import-back-2')?.addEventListener('click', () => setImportStep(1));
+  document.getElementById('import-next-2')?.addEventListener('click', () => {
+    importRaw.headers.forEach((h, idx) => {
+      const sel = document.querySelector('#mapping-table select[data-idx="'+idx+'"]');
+      if(sel) importMapping[h] = sel.value;
+    });
+    if(!Object.values(importMapping).includes('name')){ toast('Map at least one column to Item name'); return; }
+    buildPreview();
+    setImportStep(3);
+  });
+  document.getElementById('import-back-3')?.addEventListener('click', () => setImportStep(2));
+
+  function rowToLaptop(row){
+    const o = { name: '', brand: '', cpu: '', ram: '', storage: '', cost: 0, rate: 0, serial: '', lot: '', notes: '' };
+    importRaw.headers.forEach((h, i) => {
+      const key = importMapping[h];
+      if(!key || key === 'skip') return;
+      o[key] = row[i];
+    });
+    if(!String(o.name).trim()) return null;
+    let name = String(o.name).trim();
+    const brand = String(o.brand||'').trim();
+    if(brand && !name.toLowerCase().startsWith(brand.toLowerCase())) name = brand + ' ' + name;
+    return {
+      id: nextLaptopId(),
+      name,
+      cpu: String(o.cpu||'').trim(),
+      ram: String(o.ram||'').trim(),
+      storage: String(o.storage||'').trim(),
+      cost: Number(o.cost)||0,
+      rate: Number(o.rate)||Number(o.cost)||0,
+      status: 'in_stock',
+      serial: String(o.serial||'').trim(),
+      lot: String(o.lot||'').trim() || 'LOT-IMPORT',
+      notes: String(o.notes||'').trim(),
+      days: 0
+    };
+  }
+
+  function buildPreview(){
+    const laptops = importRaw.rows.map(rowToLaptop).filter(Boolean);
+    document.getElementById('import-count').textContent = laptops.length;
+    const thead = document.querySelector('#preview-table thead');
+    const tb = document.querySelector('#preview-table tbody');
+    thead.innerHTML = '<tr><th>ID</th><th>Name</th><th>Spec</th><th>Rate</th></tr>';
+    tb.innerHTML = laptops.map(l => `<tr><td>${l.id}</td><td>${escapeHtml(l.name)}</td><td>${escapeHtml(spec(l))}</td><td>${fmt(l.rate)}</td></tr>`).join('');
+    document.getElementById('import-confirm')._previewLaptops = laptops;
+  }
+
+  document.getElementById('import-confirm')?.addEventListener('click', () => {
+    const list = document.getElementById('import-confirm')._previewLaptops || [];
+    if(!list.length){ toast('Nothing to import'); return; }
+    state.laptops.push(...list);
+    saveState();
+    toast('Imported ' + list.length + ' laptops');
+    showView('inventory');
+  });
+
+  document.getElementById('btn-add-laptop')?.addEventListener('click', () => document.getElementById('modal-add-laptop').classList.add('open'));
+  document.getElementById('modal-add-cancel')?.addEventListener('click', () => document.getElementById('modal-add-laptop').classList.remove('open'));
+  document.getElementById('modal-add-save')?.addEventListener('click', () => {
+    const name = document.getElementById('add-name').value.trim();
+    if(!name){ toast('Name required'); return; }
+    state.laptops.push({
+      id: nextLaptopId(),
+      name,
+      cpu: document.getElementById('add-cpu').value.trim(),
+      ram: document.getElementById('add-ram').value.trim(),
+      storage: document.getElementById('add-storage').value.trim(),
+      cost: Number(document.getElementById('add-cost').value)||0,
+      rate: Number(document.getElementById('add-rate').value)||0,
+      status: 'in_stock',
+      lot: 'MANUAL',
+      serial: '',
+      days: 0
+    });
+    saveState();
+    document.getElementById('modal-add-laptop').classList.remove('open');
+    toast('Laptop added');
+    showView('inventory');
+  });
+
+  function renderSaleCart(){
+    const cart = document.getElementById('sale-cart');
+    const lap = saleDraft.laptopId ? state.laptops.find(l => l.id === saleDraft.laptopId) : null;
+    if(!lap || lap.status !== 'in_stock'){
+      cart.innerHTML = '<p style="color:var(--muted);font-size:12px">Use top search: type part of name/spec, pick from suggestions.</p><div id="sale-suggestions"></div>';
+      refreshSaleTotals();
+      return;
+    }
+    cart.innerHTML = `<div class="line-item"><strong>${escapeHtml(lap.name)}</strong> · ${lap.id}<br><span style="font-size:11px;color:var(--muted)">${escapeHtml(spec(lap))}</span>
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center"><span>Rate</span><input id="sale-rate-input" type="number" value="${lap.rate}" style="width:100px;padding:6px;border:1px solid var(--border);border-radius:4px">
+      <button type="button" class="btn sm ghost" id="sale-clear">Remove</button></div></div>`;
+    document.getElementById('sale-rate-input')?.addEventListener('input', e => { saleDraft.rate = Number(e.target.value)||0; refreshSaleTotals(); });
+    document.getElementById('sale-clear')?.addEventListener('click', () => { saleDraft = { laptopId: null, rate: 0 }; renderSaleCart(); });
+    saleDraft.rate = lap.rate;
+    refreshSaleTotals();
+  }
+
+  function refreshSaleTotals(){
+    const lap = saleDraft.laptopId ? state.laptops.find(l => l.id === saleDraft.laptopId) : null;
+    const sub = saleDraft.laptopId ? saleDraft.rate : 0;
+    const disc = Number(document.getElementById('sale-discount')?.value)||0;
+    const total = Math.max(0, sub - disc);
+    const paid = Number(document.getElementById('sale-paid')?.value)||0;
+    document.getElementById('sale-subtotal').textContent = fmt(sub);
+    document.getElementById('sale-total').textContent = fmt(total);
+    document.getElementById('sale-balance').textContent = fmt(Math.max(0, total - paid));
+    const profitEl = document.getElementById('sale-profit');
+    if(profitEl) profitEl.textContent = lap ? fmt(total - (lap.cost||0)) : '—';
+    const cn = document.getElementById('sale-customer')?.value.trim();
+    const cust = state.customers.find(c => c.name.toLowerCase() === cn.toLowerCase());
+    const balEl = document.getElementById('pos-cust-bal');
+    if(balEl) balEl.textContent = cust ? '₨ ' + fmt(cust.balance) : '—';
+    return { sub, disc, total, paid, balance: Math.max(0, total - paid) };
+  }
+  ['sale-discount','sale-paid'].forEach(id => document.getElementById(id)?.addEventListener('input', refreshSaleTotals));
+
+  let posTab = 'laptops';
+  const DEMO_ACCESSORIES = [
+    { sku: 'ACC-01', name: 'Dell 65W Charger', rate: 1500 },
+    { sku: 'ACC-02', name: '8GB DDR4 SODIMM', rate: 3500 },
+    { sku: 'ACC-03', name: '256GB SATA SSD', rate: 4500 }
+  ];
+
+  function switchPosTab(tab){
+    posTab = tab;
+    document.querySelectorAll('#pos-tabs button[data-pos-tab]').forEach(b =>
+      b.classList.toggle('on', b.dataset.posTab === tab));
+    const lap = document.getElementById('pos-panel-laptops');
+    const acc = document.getElementById('pos-panel-accessories');
+    const rec = document.getElementById('pos-panel-recent');
+    if(lap) lap.hidden = tab !== 'laptops';
+    if(acc) acc.hidden = tab !== 'accessories';
+    if(rec) rec.hidden = tab !== 'recent';
+    if(tab === 'accessories') renderPosAccessories();
+    if(tab === 'recent') renderPosRecent();
+  }
+
+  function renderPosAccessories(){
+    const box = document.getElementById('pos-accessory-list');
+    if(!box) return;
+    const q = (document.getElementById('pos-acc-search')?.value || '').toLowerCase().trim();
+    const items = DEMO_ACCESSORIES.filter(a => !q || a.name.toLowerCase().includes(q) || a.sku.toLowerCase().includes(q));
+    box.innerHTML = items.map(a =>
+      `<div class="line-item" style="margin-bottom:8px"><strong>${escapeHtml(a.name)}</strong> · ${a.sku}<br><span style="font-size:11px;color:var(--muted)">₨ ${fmt(a.rate)}</span>
+      <button type="button" class="btn sm" style="margin-top:6px" disabled title="V2">Add to sale (V2)</button></div>`
+    ).join('') || '<p style="color:var(--muted);font-size:12px">No match</p>';
+  }
+
+  function renderPosRecent(){
+    const box = document.getElementById('pos-recent-list');
+    if(!box) return;
+    const sold = state.laptops.filter(l => l.status === 'sold').slice(-10).reverse();
+    box.innerHTML = sold.length ? sold.map(l =>
+      `<button type="button" class="btn sm" style="display:block;width:100%;text-align:left;margin-bottom:6px">${l.id} — ${escapeHtml(l.name)} <span style="color:var(--muted)">sold</span></button>`
+    ).join('') : '<p style="color:var(--muted);font-size:12px">No sold units yet</p>';
+    box.querySelectorAll('button').forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        const sale = state.sales.filter(s => s.laptopId === sold[i].id).pop();
+        if(sale) openReceipt(sale.id);
+        else toast('No bill linked for this unit');
+      });
+    });
+  }
+
+  document.getElementById('pos-tabs')?.addEventListener('click', e => {
+    const t = e.target.closest('[data-pos-tab]');
+    if(t) switchPosTab(t.dataset.posTab);
+  });
+  document.getElementById('pos-acc-search')?.addEventListener('input', renderPosAccessories);
+
+  document.getElementById('btn-quick')?.addEventListener('click', e => {
+    e.stopPropagation();
+    const menu = document.getElementById('quick-menu');
+    const open = menu.classList.toggle('open');
+    document.getElementById('btn-quick')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.getElementById('quick-add-laptop')?.addEventListener('click', () => {
+    document.getElementById('quick-menu')?.classList.remove('open');
+    document.getElementById('modal-add-laptop')?.classList.add('open');
+  });
+  document.addEventListener('click', e => {
+    if(!e.target.closest('.quick-wrap')){
+      document.getElementById('quick-menu')?.classList.remove('open');
+      document.getElementById('det-more-menu')?.classList.remove('open');
+    }
+  });
+  document.getElementById('quick-menu')?.addEventListener('click', e => {
+    if(e.target.closest('[data-goto]')) document.getElementById('quick-menu')?.classList.remove('open');
+  });
+
+  function bindSaleSearch(input){
+    input?.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase().trim();
+      const active = document.querySelector('.view.active');
+      if(active?.id !== 'view-sales-new' || posTab !== 'laptops') return;
+      let box = document.getElementById('sale-suggestions');
+      if(!box && document.getElementById('sale-cart')){
+        document.getElementById('sale-cart').insertAdjacentHTML('beforeend', '<div id="sale-suggestions"></div>');
+        box = document.getElementById('sale-suggestions');
+      }
+      if(!box) return;
+      if(q.length < 2){ box.innerHTML = ''; return; }
+      const hits = state.laptops.filter(l => l.status === 'in_stock' && (
+        l.name.toLowerCase().includes(q) || l.id.toLowerCase().includes(q) ||
+        spec(l).toLowerCase().includes(q)
+      )).slice(0, 12);
+      box.innerHTML = hits.map(l => `<button type="button" class="btn sm" style="display:block;width:100%;text-align:left;margin-top:4px" data-pick="${l.id}">${l.id} — ${escapeHtml(l.name)} (${escapeHtml(spec(l))})</button>`).join('');
+      box.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', () => {
+        saleDraft.laptopId = b.dataset.pick;
+        renderSaleCart();
+      }));
+    });
+  }
+  bindSaleSearch(document.getElementById('globalSearch'));
+  bindSaleSearch(document.getElementById('pos-search'));
+  document.getElementById('inv-filter-q')?.addEventListener('input', renderInventory);
+  document.getElementById('cust-filter')?.addEventListener('input', renderCustomersList);
+  document.getElementById('sale-customer')?.addEventListener('input', refreshSaleTotals);
+
+  document.getElementById('btn-complete-sale')?.addEventListener('click', () => {
+    const lap = state.laptops.find(l => l.id === saleDraft.laptopId);
+    if(!lap || lap.status !== 'in_stock'){ toast('Select an in-stock laptop first (search on New sale)'); showView('sales-new'); return; }
+    const { total, paid, balance } = refreshSaleTotals();
+    if(total <= 0){ toast('Enter a valid rate'); return; }
+    const billId = state.nextBill++;
+    lap.status = 'sold';
+    const custName = document.getElementById('sale-customer').value.trim() || 'Walk-in';
+    let cust = state.customers.find(c => c.name.toLowerCase() === custName.toLowerCase());
+    if(!cust && custName !== 'Walk-in'){
+      cust = { id: state.nextCust++, name: custName, phone: '', city: '', address: '', balance: 0, creditLimit: 100000, ledger: [] };
+      state.customers.push(cust);
+    }
+    const sale = {
+      id: billId,
+      date: new Date().toISOString().slice(0, 10),
+      customer: custName,
+      customerId: cust?.id,
+      laptopId: lap.id,
+      itemName: lap.name,
+      itemId: lap.id,
+      total, paid, balance,
+      costAtSale: lap.cost,
+      staff: 'Counter 1'
+    };
+    state.sales.push(sale);
+    if(cust && balance > 0){ cust.balance = (cust.balance||0) + balance; }
+    saveState();
+    saleDraft = { laptopId: null, rate: 0 };
+    openReceipt(billId);
+    toast('Sale saved · QR generated');
+  });
+
+  function receiptQrText(saleId){
+    const s = state.sales.find(x => x.id === saleId);
+    if(location.protocol === 'http:' || location.protocol === 'https:'){
+      const u = new URL(location.href);
+      u.search = '';
+      u.searchParams.set('sale', String(saleId));
+      return u.toString();
+    }
+    const payload = {
+      shop: 'Dubai Plaza',
+      bill: saleId,
+      date: s?.date,
+      customer: s?.customer,
+      item: s?.itemId,
+      total: s?.total
+    };
+    return 'DubaiPlaza:' + JSON.stringify(payload);
+  }
+
+  function paintEmptyReceipt(){
+    document.getElementById('receipt-title').textContent = 'Invoice';
+    document.getElementById('receipt-details').innerHTML = '<span style="color:var(--muted)">Complete a sale from <strong>New sale (POS)</strong> to generate bill & QR.</span>';
+    document.getElementById('receipt-lines').innerHTML = '';
+    document.getElementById('receipt-payments').innerHTML = '';
+    const box = document.getElementById('qr-box');
+    if(box) box.innerHTML = '<span style="font-size:11px;padding:8px;text-align:center;color:#666">No QR yet</span>';
+  }
+
+  function fillReceiptView(saleId){
+    currentSaleId = saleId;
+    const s = state.sales.find(x => x.id === saleId);
+    if(!s){ toast('Sale not found'); paintEmptyReceipt(); return; }
+    document.getElementById('receipt-title').textContent = 'Invoice #' + s.id;
+    const warr = new Date(s.date);
+    warr.setDate(warr.getDate() + 30);
+    document.getElementById('receipt-details').innerHTML =
+      `Bill #${s.id} · ${s.date}<br>Customer: ${escapeHtml(s.customer)}<br>Staff: ${s.staff||'—'}<br><br>${escapeHtml(s.itemName)} · ${s.itemId}<br>Total ₨ ${fmt(s.total)} · Paid ₨ ${fmt(s.paid)} · Udhaar ₨ ${fmt(s.balance)}<br>Warranty until: ${warr.toISOString().slice(0,10)}`;
+    document.getElementById('receipt-lines').innerHTML = `<tr><td>${escapeHtml(s.itemName)}<br><small>${s.itemId}</small></td><td>1</td><td>${fmt(s.total)}</td><td>${fmt(s.total)}</td></tr>`;
+    document.getElementById('receipt-payments').innerHTML = `<div class="amount-row"><span>Cash / paid</span><span>₨ ${fmt(s.paid)}</span></div><div class="amount-row"><span>Udhaar</span><span>₨ ${fmt(s.balance)}</span></div><div class="amount-row total"><span>Total</span><span>₨ ${fmt(s.total)}</span></div>`;
+  }
+
+  function openReceipt(saleId){
+    fillReceiptView(saleId);
+    showView('sales-receipt');
+  }
+
+  document.getElementById('btn-save-customer')?.addEventListener('click', () => {
+    const name = document.getElementById('new-cust-name').value.trim();
+    const phone = document.getElementById('new-cust-phone').value.trim();
+    if(!name || !phone){ toast('Name and phone required'); return; }
+    state.customers.push({
+      id: state.nextCust++,
+      name, phone,
+      city: document.getElementById('new-cust-city').value.trim(),
+      address: document.getElementById('new-cust-addr').value.trim(),
+      creditLimit: Number(document.getElementById('new-cust-limit').value)||100000,
+      balance: 0,
+      ledger: []
+    });
+    saveState();
+    toast('Customer saved');
+    showView('customers');
+  });
+
+  document.getElementById('btn-record-payment')?.addEventListener('click', () => {
+    const cid = Number(document.getElementById('pay-customer').value);
+    const amt = Number(document.getElementById('pay-amount').value)||0;
+    const c = state.customers.find(x=>x.id===cid);
+    if(!c || amt<=0){ toast('Enter amount'); return; }
+    c.balance = Math.max(0, c.balance - amt);
+    if(!c.ledger) c.ledger = [];
+    c.ledger.unshift({ date: new Date().toISOString().slice(0,10), type: 'Payment', ref: 'RCPT-' + Date.now().toString().slice(-4), debit: 0, credit: amt, balance: c.balance, by: 'Owner' });
+    saveState();
+    toast('Payment recorded');
+    renderPaymentForm();
+    renderCustomersList();
+  });
+
+  function renderQr(text){
+    const box = document.getElementById('qr-box');
+    if(!box) return;
+    const payload = String(text);
+    box.innerHTML = '<span style="font-size:11px;color:#666">Generating QR…</span>';
+
+    function showImg(src){
+      box.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src;
+      img.width = 156;
+      img.height = 156;
+      img.alt = 'Bill QR';
+      img.onerror = () => qrServerFallback();
+      box.appendChild(img);
+    }
+
+    function qrServerFallback(){
+      showImg('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(payload));
+    }
+
+    function tryLibrary(){
+      if(typeof QRCode === 'undefined'){ qrServerFallback(); return; }
+      const opts = { width: 200, margin: 1, errorCorrectionLevel: 'M' };
+      try {
+        const ret = QRCode.toDataURL(payload, opts);
+        if(ret && typeof ret.then === 'function'){
+          ret.then(showImg).catch(qrServerFallback);
+          return;
+        }
+      } catch(e) { /* callback form below */ }
+      QRCode.toDataURL(payload, opts, (err, url) => {
+        if(err || !url) qrServerFallback();
+        else showImg(url);
+      });
+    }
+
+    requestAnimationFrame(() => requestAnimationFrame(tryLibrary));
+  }
+
+  function accountMetrics(){
+    const cashIn = state.sales.reduce((s,x)=>s+(x.paid||0),0);
+    const recv = state.customers.reduce((s,c)=>s+(c.balance||0),0);
+    const stockVal = state.laptops.filter(l=>l.status==='in_stock').reduce((s,l)=>s+(l.cost||0),0);
+    let revenue = 0, cogs = 0;
+    state.sales.forEach(s => { revenue += s.total||0; cogs += s.costAtSale||0; });
+    return { cashIn, recv, profit: revenue - cogs, stockVal, revenue, cogs, saleCount: state.sales.length };
+  }
+
+  function renderAccounts(viewId){
+    const m = accountMetrics();
+    const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = typeof v === 'number' ? ('₨ ' + fmt(v)) : v; };
+    set('acc-cash-in', m.cashIn);
+    set('acc-receivables', m.recv);
+    set('acc-profit', m.profit);
+    set('acc-stock-val', m.stockVal);
+    set('acc-sale-count', m.saleCount);
+    set('acc-recv-total', m.recv);
+    set('acc-recv-count', state.customers.filter(c=>c.balance>0).length);
+    set('acc-recv-sales', state.sales.reduce((s,x)=>s+(x.balance||0),0));
+    const top = state.customers.slice().sort((a,b)=>b.balance-a.balance)[0];
+    set('acc-recv-top', top ? top.name : '—');
+    set('acc-pl-revenue', m.revenue);
+    set('acc-pl-cogs', m.cogs);
+    set('acc-pl-gross', m.profit);
+
+    const recent = document.getElementById('acc-ledger-recent');
+    if(recent) recent.innerHTML = state.sales.slice(-8).reverse().map(s =>
+      `<tr><td>${s.date}</td><td>Sale</td><td>#${s.id}</td><td>${fmt(s.paid)}</td><td>—</td><td>${escapeHtml(s.customer)}</td></tr>`
+    ).join('');
+
+    const cb = document.getElementById('acc-cashbook-tbody');
+    if(cb){
+      let run = 0;
+      cb.innerHTML = state.sales.slice().reverse().map(s => {
+        run += s.paid||0;
+        return `<tr><td>${s.date}</td><td>#${s.id}</td><td>Sale</td><td>${escapeHtml(s.customer)}</td><td>${fmt(s.paid)}</td><td>—</td><td>${fmt(run)}</td><td>${s.staff||'Staff'}</td></tr>`;
+      }).join('');
+    }
+
+    const rt = document.getElementById('acc-receivables-tbody');
+    if(rt) rt.innerHTML = state.customers.filter(c=>c.balance>0).map(c =>
+      `<tr><td>${escapeHtml(c.name)}</td><td>${c.phone}</td><td><strong>${fmt(c.balance)}</strong></td><td>—</td><td>${fmt(c.creditLimit)}</td><td>${fmt(Math.max(0,c.creditLimit-c.balance))}</td><td><button type="button" class="btn sm" data-goto="customer-detail" data-cid="${c.id}">Open</button></td></tr>`
+    ).join('') || '<tr><td colspan="7">No outstanding balance</td></tr>';
+
+    const pt = document.getElementById('acc-profit-tbody');
+    if(pt) pt.innerHTML = state.sales.slice().reverse().map(s => {
+      const cost = s.costAtSale||0;
+      const profit = (s.total||0) - cost;
+      const margin = s.total ? Math.round((profit/s.total)*100) : 0;
+      return `<tr><td>${s.id}</td><td>${s.date}</td><td>${escapeHtml(s.itemName||'')} ${s.itemId||''}</td><td>${fmt(s.total)}</td><td>${fmt(cost)}</td><td>${fmt(profit)}</td><td>${margin}%</td></tr>`;
+    }).join('');
+  }
+
+  function downloadCsv(filename, rows){
+    const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = filename;
+    a.click();
+  }
+  document.getElementById('btn-export-sales')?.addEventListener('click', () => {
+    downloadCsv('sales.csv', [['Bill','Date','Customer','Total','Paid','Balance'], ...state.sales.map(s=>[s.id,s.date,s.customer,s.total,s.paid,s.balance])]);
+    toast('Sales CSV downloaded');
+  });
+  document.getElementById('btn-export-customers')?.addEventListener('click', () => {
+    downloadCsv('customers.csv', [['Name','Phone','Balance'], ...state.customers.map(c=>[c.name,c.phone,c.balance])]);
+    toast('Customers CSV downloaded');
+  });
+  document.getElementById('btn-export-stock')?.addEventListener('click', () => {
+    downloadCsv('stock.csv', [['ID','Name','Cost','Rate','Status'], ...state.laptops.map(l=>[l.id,l.name,l.cost,l.rate,l.status])]);
+    toast('Stock CSV downloaded');
+  });
+  document.getElementById('btn-regen-qr')?.addEventListener('click', () => {
+    if(currentSaleId) renderQr(receiptQrText(currentSaleId));
+    else toast('Open or complete a sale first');
+  });
+
+  navButtons.forEach(b => b.addEventListener('click', () => {
+    if(b.dataset.view === 'sales-payments') paymentContext = 'sales';
+    showView(b.dataset.view);
+  }));
+
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-goto]');
+    if(!el) return;
+    if(el.tagName === 'A' || el.hasAttribute('data-goto')) e.preventDefault();
+    if(e.target.closest('tr.clickable') && !e.target.closest('button')) return;
+    const target = el.dataset.goto;
+    if(!target) return;
+    if(el.dataset.cid) selectedCustomerId = Number(el.dataset.cid);
+    if(el.dataset.payCtx) paymentContext = el.dataset.payCtx;
+    else if(target === 'sales-payments' && moduleForView(document.querySelector('.view.active')?.id?.replace('view-','')) === 'customers')
+      paymentContext = 'customers';
+    else if(target === 'sales-payments' && paymentContext !== 'customers') paymentContext = 'sales';
+    showView(target);
+  });
+
+  const params = new URLSearchParams(location.search);
+  const saleParam = params.get('sale');
+  if(saleParam) openReceipt(Number(saleParam));
+  else { showView('dashboard'); renderInventory(); renderSalesList(); renderCustomersList(); fillCustomerDatalist(); }
+})();
+</script>
+</body>
+</html>

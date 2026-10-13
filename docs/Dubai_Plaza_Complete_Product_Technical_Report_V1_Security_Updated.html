@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dubai Plaza Stock System — Complete Product & Technical Report</title>
+<style>
+:root{--bg:#f5f3ee;--paper:#fff;--ink:#20201d;--muted:#6b6962;--line:#d8d4cb;--soft:#efede7;--good:#356b45;--warn:#8a5b18;--blue:#315d86}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Arial,Helvetica,sans-serif}
+main{max-width:1180px;margin:auto;background:var(--paper);padding:55px 60px;min-height:100vh}
+h1{font-size:42px;line-height:1.08;margin:10px 0}h2{font-size:25px;margin:0 0 7px;padding-top:8px}h3{font-size:18px}
+.eyebrow,.note{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:bold}.lead{font-size:18px;color:#4f4d47}
+header{border-bottom:2px solid var(--ink);padding-bottom:30px;margin-bottom:30px}.facts,.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.grid{grid-template-columns:repeat(2,1fr)}
+.fact,.card{border:1px solid var(--line);padding:14px;background:#fff}.fact{background:var(--soft)}.fact dt{font-size:10px;text-transform:uppercase;color:var(--muted)}.fact dd{margin:2px 0;font-weight:bold}
+section{padding:30px 0;border-bottom:1px solid var(--line)}.key{border-left:4px solid var(--ink);background:#f1efe9;padding:15px 19px;margin:18px 0}.good{border-left-color:var(--good);background:#eef6f0}.warn{border-left-color:var(--warn);background:#fbf4e7}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:760px;font-size:13px}th,td{border:1px solid var(--line);padding:10px;vertical-align:top;text-align:left}th{background:var(--soft);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+pre{background:#20201d;color:#fff;padding:17px;overflow:auto}code{font-family:Consolas,monospace}a{color:var(--blue);word-break:break-word}.small{font-size:12px;color:var(--muted)}
+@media(max-width:800px){main{padding:32px 18px}.facts{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}h1{font-size:34px}}@media(max-width:480px){.facts{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+
+<header>
+<div class="eyebrow">Complete proposed product & technical report · Web-only V1 + roadmap</div>
+<h1>Dubai Plaza Stock System</h1>
+<p class="lead">A cloud-first, multi-user browser web application for second-hand laptop dealers. V1 is deliberately a conventional website: no downloadable desktop application, no Android/iOS application, no PWA installation and no offline transaction mode.</p>
+<div class="facts">
+<div class="fact"><dt>Platform</dt><dd>Browser web application</dd></div>
+<div class="fact"><dt>Frontend</dt><dd>HTML5 · CSS3 · Bootstrap 5 · JS</dd></div>
+<div class="fact"><dt>Backend</dt><dd>Laravel · PHP</dd></div>
+<div class="fact"><dt>Database</dt><dd>PostgreSQL</dd></div>
+<div class="fact"><dt>Differentiator</dt><dd>Instant laptop-native search</dd></div>
+<div class="fact"><dt>Inventory model</dt><dd>Serialized laptops + quantity accessories</dd></div>
+<div class="fact"><dt>Hosting</dt><dd>Managed cloud</dd></div>
+<div class="fact"><dt>Future</dt><dd>API/mobile/PWA after validation</dd></div>
+</div>
+</header>
+
+<section><h2>1. Executive decision</h2>
+<p>The project should be built as a proper website/web application around the workflow <strong>search → inspect → sell → collect → understand profit</strong>. The strongest V1 choice is:</p>
+<div class="key good"><strong>HTML5 + CSS3 + Bootstrap 5 + Vanilla JavaScript → Laravel + PHP → PostgreSQL</strong></div>
+<p>This is preferred over React + TypeScript + NestJS for V1 because it reduces architectural overhead while remaining fully capable of inventory, sales, customer credit, Excel import, reporting, authentication and future API access.</p>
+</section>
+
+<section><h2>2. V1 scope</h2>
+<ul>
+<li>Secure login, owner/staff permissions and organization/shop isolation.</li>
+<li>Serialized laptop inventory: one row per physical laptop.</li>
+<li>Accessory inventory: chargers, RAM, SSDs, batteries and similar quantity stock.</li>
+<li>XLSX/CSV import with preview, mapping, validation and lot/cost allocation.</li>
+<li>Fast laptop search with normalized tokens and safe numeric matching.</li>
+<li>Grouped search results with stock count and direct Sell action.</li>
+<li>Sales with negotiated price, discounts, cash, partial payment and credit/Udhaar.</li>
+<li>Customer ledger, payment history and outstanding balances.</li>
+<li>Returns, warranty lookup and controlled corrections.</li>
+<li>Historical profit using <code>cost_at_sale</code>.</li>
+<li>Stock aging/dead-stock reporting, dashboard and audit logs.</li>
+<li>Cloud database, automated backups and business-data export.</li>
+</ul>
+<div class="key warn"><strong>Not V1:</strong> Android/iOS app, downloadable desktop app, PWA, offline transactions/sync, barcode/QR hardware, voice search, AI assistant, full multi-branch operations, payroll, complex accounting and e-commerce integrations.</div>
+</section>
+
+<section><h2>3. Competitor feature provenance</h2>
+<p class="note">Public products were studied for feature benchmarking. The implementation must be original; no competitor code, private data, branding or proprietary UI should be copied.</p>
+<div class="scroll"><table>
+<thead><tr><th>Software / website</th><th>Feature studied</th><th>Dubai Plaza adaptation</th><th>Release</th></tr></thead>
+<tbody>
+<tr><td><strong>RizqPos</strong><br><a href="https://rizqpos.com/" target="_blank">rizqpos.com</a></td><td>Inventory, billing, ledger, reports, sync, backup.</td><td>Pakistan-oriented customer ledger, inventory controls and reports. Offline sync deferred.</td><td>V1/V2</td></tr>
+<tr><td><strong>Sauda</strong><br><a href="https://www.saudaapps.com/" target="_blank">saudaapps.com</a></td><td>POS, inventory, Khata/Udhaar, Excel import, warehouse stock, WhatsApp.</td><td>Credit ledger, Excel onboarding and future WhatsApp reminders. Offline deferred.</td><td>V1/V2</td></tr>
+<tr><td><strong>SadaPOS</strong><br><a href="https://www.sadapos.com/" target="_blank">sadapos.com</a></td><td>Serial/IMEI tracking, stock deduction, customer ledgers, reports, barcode.</td><td>Serialized laptops, sale-time stock deduction, ledger and future barcode/QR.</td><td>V1/V2</td></tr>
+<tr><td><strong>invo.pk</strong><br><a href="https://invo.pk/" target="_blank">invo.pk</a></td><td>Fast POS, inventory, Khata/Udhaar, receipts, stock valuation.</td><td>Fast selling, stock valuation and customer credit.</td><td>V1</td></tr>
+<tr><td><strong>LookPOS</strong><br><a href="https://lookpos.com/public/pk/retail/" target="_blank">lookpos.com</a></td><td>Quick billing, flexible payment, returns/exchanges, Khata.</td><td>Search-to-sale, payment handling, returns and customer linkage.</td><td>V1</td></tr>
+<tr><td><strong>NexRetail / BasiraSoft</strong><br><a href="https://basirasoft.com/products/nexretail-pos/" target="_blank">basirasoft.com</a></td><td>Serial/IMEI, warranty verification, CRM, Udhaar.</td><td>Serialized warranty, customer history and future scanning.</td><td>V1/V2</td></tr>
+<tr><td><strong>Odoo</strong><br><a href="https://www.odoo.com/documentation/18.0/applications/inventory_and_mrp/inventory/product_management/product_tracking/serial_numbers.html" target="_blank">odoo.com</a></td><td>Lots/serials, individual traceability and lifecycle history.</td><td>Container lots, individual laptop traceability and stock history.</td><td>V1</td></tr>
+<tr><td><strong>Zoho Inventory</strong><br><a href="https://www.zoho.com/us/inventory/help/advanced-inventory-tracking/serial-number-tracking.html" target="_blank">zoho.com</a></td><td>Serial/batch tracking, returns, reorder points and inventory controls.</td><td>Serialized stock, accessory reorder thresholds and controlled returns.</td><td>V1/V2</td></tr>
+<tr><td><strong>Lightspeed Retail</strong><br><a href="https://retail-support.lightspeedhq.com/hc/en-us/articles/37022957532443-Selling-products-with-serial-numbers" target="_blank">lightspeedhq.com</a></td><td>Serialized sales, customer association and warranty lifecycle.</td><td>Link laptop → customer → sale → warranty → return/repair history.</td><td>V1</td></tr>
+<tr><td><strong>Sortly</strong><br><a href="https://www.sortly.com/barcode-inventory-system/" target="_blank">sortly.com</a></td><td>Barcode/QR item identification.</td><td>Future stock-code barcode/QR lookup.</td><td>V2</td></tr>
+<tr><td><strong>Square Retail</strong><br><a href="https://squareup.com/us/en/point-of-sale/retail" target="_blank">squareup.com</a></td><td>Checkout, discounts, refunds, COGS, sales and slow-moving stock.</td><td>Negotiated pricing, returns, historical profit and aging/dead stock.</td><td>V1</td></tr>
+<tr><td><strong>Shop Ledger</strong><br><a href="https://www.shopledgerapp.com/" target="_blank">shopledgerapp.com</a></td><td>COGS, stock-at-cost, Khata and payment history.</td><td>Customer ledger, true cost and historical profit.</td><td>V1</td></tr>
+<tr><td><strong>BazaarMint</strong><br><a href="https://www.bazaarmint.com/" target="_blank">bazaarmint.com</a></td><td>Fast billing, inventory, Khata, staff logins and reports.</td><td>Fast counter workflow, staff attribution and reports.</td><td>V1</td></tr>
+<tr><td><strong>Four Star POS</strong><br><a href="https://fourstarpos.com/" target="_blank">fourstarpos.com</a></td><td>Billing, inventory, Udhaar, Excel, branches and profit after cost.</td><td>Excel intake, credit, cost/profit visibility and future branches.</td><td>V1/V2</td></tr>
+</tbody></table></div>
+</section>
+
+<section><h2>4. Our product differentiation</h2>
+<div class="grid">
+<div class="card"><strong>Laptop-native search</strong>Natural combinations such as <code>dell i5 8gb 256ssd</code>, with AND logic and safe numeric matching.</div>
+<div class="card"><strong>Serialized economics</strong>Every laptop keeps its own cost, defects, asking price, status and historical sale cost.</div>
+<div class="card"><strong>Container intelligence</strong>Supplier Excel data creates a lot and individual laptop records without manual re-entry.</div>
+<div class="card"><strong>Search → Sell</strong>The search result itself becomes the start of the sale.</div>
+<div class="card"><strong>True unit profit</strong><code>cost_at_sale</code> protects historical profit from later stock edits.</div>
+<div class="card"><strong>Owner attention dashboard</strong>Receivables, aging stock, low-margin units and capital tied in dead stock.</div>
+</div>
+</section>
+
+<section><h2>5. Recommended software stack</h2>
+<div class="scroll"><table>
+<thead><tr><th>Layer</th><th>Software</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>Markup</td><td>HTML5</td><td>Page structure and accessibility.</td></tr>
+<tr><td>Styling</td><td>CSS3</td><td>Custom styling and responsive refinements.</td></tr>
+<tr><td>UI</td><td>Bootstrap 5</td><td>Forms, tables, navigation, modals and responsive layout.</td></tr>
+<tr><td>Browser logic</td><td>Vanilla JavaScript + Fetch API</td><td>Search, dynamic UI and asynchronous requests.</td></tr>
+<tr><td>Backend</td><td>Laravel + PHP</td><td>Routing, auth, validation, business rules, APIs and jobs.</td></tr>
+<tr><td>ORM</td><td>Laravel Eloquent</td><td>Database relationships and maintainable queries.</td></tr>
+<tr><td>Database</td><td>PostgreSQL</td><td>Transactional relational storage.</td></tr>
+<tr><td>Search</td><td>Custom tokenizer + PostgreSQL indexes + pg_trgm where useful</td><td>Laptop-specific search and server fallback.</td></tr>
+<tr><td>Excel</td><td>PhpSpreadsheet</td><td>XLSX/CSV import and validation.</td></tr>
+<tr><td>Auth/API</td><td>Laravel Auth / Sanctum where needed</td><td>Secure sessions and future API clients.</td></tr>
+<tr><td>Charts</td><td>Chart.js</td><td>Dashboard visualization.</td></tr>
+<tr><td>Testing</td><td>PHPUnit + Laravel feature tests + Postman</td><td>Automated and API workflow testing.</td></tr>
+<tr><td>Tools</td><td>Composer, npm, Git, GitHub, Visual Studio Code</td><td>Dependencies, source control and development.</td></tr>
+<tr><td>Infrastructure</td><td>Managed cloud hosting + Managed PostgreSQL + cloud object storage</td><td>Production hosting, data and files.</td></tr>
+</tbody></table></div>
+</section>
+
+<section><h2>6. Option A vs Option C</h2>
+<div class="scroll"><table>
+<thead><tr><th>Criteria</th><th>Option A — HTML/CSS/Bootstrap/JS + Laravel/PHP + PostgreSQL</th><th>Option C — React/TypeScript + NestJS + PostgreSQL</th><th>V1 winner</th></tr></thead>
+<tbody>
+<tr><td>Development speed</td><td>Very fast for business CRUD/workflows.</td><td>Good but needs frontend/API architecture.</td><td><strong>A</strong></td></tr>
+<tr><td>Complexity</td><td>Low–Medium.</td><td>Medium–High.</td><td><strong>A</strong></td></tr>
+<tr><td>Learning curve</td><td>Lower.</td><td>Higher: React + TS + NestJS + ORM/API patterns.</td><td><strong>A</strong></td></tr>
+<tr><td>Inventory CRUD</td><td>Excellent.</td><td>Excellent.</td><td>Both</td></tr>
+<tr><td>Sales workflow</td><td>Fewer layers; Laravel handles business logic directly.</td><td>React state/forms + API + NestJS services.</td><td><strong>A</strong></td></tr>
+<tr><td>Excel import</td><td>Very straightforward with PhpSpreadsheet.</td><td>Very capable with Node libraries.</td><td><strong>A</strong></td></tr>
+<tr><td>Authentication</td><td>Mature Laravel ecosystem.</td><td>More architectural choices.</td><td><strong>A</strong></td></tr>
+<tr><td>Database access</td><td>Eloquent integrated with Laravel.</td><td>Usually Prisma/TypeORM plus NestJS.</td><td><strong>A</strong></td></tr>
+<tr><td>Interactive UI</td><td>Good with targeted JS.</td><td>Excellent.</td><td>C</td></tr>
+<tr><td>Complex dashboards</td><td>Good for V1.</td><td>Better for very component-heavy UIs.</td><td>C</td></tr>
+<tr><td>API-first</td><td>Supported.</td><td>Excellent.</td><td>C</td></tr>
+<tr><td>Future mobile</td><td>Laravel API can support it.</td><td>Excellent foundation.</td><td>C</td></tr>
+<tr><td>Large SaaS frontend</td><td>Very good; can evolve later.</td><td>Excellent.</td><td>C</td></tr>
+<tr><td>Deployment</td><td>Relatively simple.</td><td>More components/decisions.</td><td><strong>A</strong></td></tr>
+<tr><td>V1 maintainability</td><td>Excellent for this domain.</td><td>Excellent with a specialized team.</td><td><strong>A</strong></td></tr>
+<tr><td>Overall V1 fit</td><td><strong>★★★★★</strong></td><td><strong>★★★★☆</strong></td><td><strong>A</strong></td></tr>
+</tbody></table></div>
+<div class="key good"><strong>Final choice:</strong> Option A. Option C is not rejected; it becomes more attractive if the product grows into a highly interactive SaaS with a large engineering team, many branches/users, complex real-time interfaces or dedicated apps.</div>
+</section>
+
+<section><h2>7. Why React + NestJS adds complexity</h2>
+<ul>
+<li>Separate frontend and backend application layers.</li>
+<li>More state handling for forms, loading, caching, errors and mutations.</li>
+<li>More dependency decisions for forms, validation, API data fetching and UI components.</li>
+<li>Explicit API contracts between React and NestJS.</li>
+<li>More decisions around authentication and token/session architecture.</li>
+<li>More places for business logic to be incorrectly duplicated between client and server.</li>
+<li>More deployment/monitoring components.</li>
+</ul>
+<p>This is useful complexity when the product needs it. For V1 it is mostly overhead around relatively conventional inventory and business workflows.</p>
+</section>
+
+<section><h2>8. Architecture</h2>
+<pre>Browser
+  ├── HTML5
+  ├── CSS3
+  ├── Bootstrap 5
+  └── Vanilla JavaScript / Fetch
+          │ HTTPS
+          ▼
+Laravel + PHP
+  ├── Authentication / authorization
+  ├── Validation
+  ├── Search
+  ├── Excel import
+  ├── Inventory
+  ├── Sales + payments
+  ├── Ledger / warranty / returns
+  ├── Reports
+  └── Audit logging
+          │
+          ▼
+Managed PostgreSQL
+  ├── organizations / shops
+  ├── users / roles
+  ├── lots
+  ├── laptop_units
+  ├── products
+  ├── customers
+  ├── sales / sale_items
+  ├── payments
+  ├── stock_movements
+  └── audit_logs
+          │
+     ┌────┴─────┐
+     ▼          ▼
+Cloud files  Backups</pre>
+</section>
+
+<section><h2>9. Data-model rules</h2>
+<ul>
+<li><strong>One laptop = one serialized unit record.</strong></li>
+<li><strong>Accessories = quantity inventory.</strong></li>
+<li><strong>Historical profit:</strong> copy <code>cost_at_sale</code> into each sale item.</li>
+<li><strong>Atomic selling:</strong> mark stock sold and create sale records inside one database transaction.</li>
+<li><strong>Tenant isolation:</strong> business-owned tables carry organization/shop boundaries.</li>
+<li><strong>Audit:</strong> price, stock, sale, return, payment and permission changes are traceable.</li>
+</ul>
+</section>
+
+<section><h2>10. Core workflows</h2>
+<h3>Excel intake</h3>
+<pre>Supplier XLSX/CSV → Upload → Preview → Column mapping → Validation
+→ Create lot → Allocate cost → Create laptop units → Searchable stock</pre>
+<h3>Search</h3>
+<pre>User query → Normalize → Tokenize → Safe numeric matching
+→ Active-stock search → Group configurations → Inspect → Sell</pre>
+<h3>Sale</h3>
+<pre>Search → Select unit → Customer → Negotiated price/discount
+→ Cash/partial/credit → DB transaction
+→ Sold status + sale + cost_at_sale + payment + warranty</pre>
+</section>
+
+<section><h2>11. Build sequence</h2>
+<div class="scroll"><table>
+<thead><tr><th>Phase</th><th>Build</th><th>Exit condition</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Laravel, Bootstrap, PostgreSQL, migrations, auth.</td><td>Secure login works.</td></tr>
+<tr><td>2</td><td>Organizations, users, lots, laptop units, accessories.</td><td>Real stock can be stored.</td></tr>
+<tr><td>3</td><td>Excel import, mapping, validation and cost allocation.</td><td>Real supplier sheet imports.</td></tr>
+<tr><td>4</td><td>Search normalizer, grouped results and PostgreSQL fallback.</td><td>Owner reliably finds laptops.</td></tr>
+<tr><td>5</td><td>Sales, payments, customers, credit, returns, warranty.</td><td>Complete sale lifecycle works.</td></tr>
+<tr><td>6</td><td>Profit, aging, dashboard, reports and audit.</td><td>Owner can answer business questions.</td></tr>
+<tr><td>7</td><td>Security, backups, real-data testing and deployment.</td><td>Production website is stable.</td></tr>
+</tbody></table></div>
+</section>
+
+<section><h2>12. V2 roadmap</h2>
+<div class="grid">
+<div class="card"><strong>Multi-branch</strong>Branch switching, stock transfers and branch reporting.</div>
+<div class="card"><strong>Barcode / QR</strong>Fast stock-code lookup.</div>
+<div class="card"><strong>Photos</strong>Per-unit condition photos in cloud storage.</div>
+<div class="card"><strong>Voice search</strong>Urdu/English/Roman Urdu after typed search is proven.</div>
+<div class="card"><strong>WhatsApp</strong>Receipts, reminders and warranty messages.</div>
+<div class="card"><strong>AI assistant</strong>Authorized read-only business questions.</div>
+<div class="card"><strong>Price intelligence</strong>Cost/age/margin/historical-price suggestions.</div>
+<div class="card"><strong>Mobile/PWA/desktop</strong>New clients using the stable backend.</div>
+<div class="card"><strong>Offline mode</strong>Only after synchronization/conflict requirements are proven.</div>
+<div class="card"><strong>Supplier intelligence</strong>Remember Excel mappings and compare lot performance.</div>
+</div>
+</section>
+
+<section><h2>13. Open-source repositories for reference</h2>
+<p class="note">Use these for architecture study and prototypes. Check each repository's license before reusing code.</p>
+<div class="scroll"><table>
+<thead><tr><th>Repository</th><th>Stack / useful features</th><th>Link</th></tr></thead>
+<tbody>
+<tr><td>Inventory Management Software Laravel</td><td>Laravel, Bootstrap, JS, Excel, activity logging.</td><td><a href="https://github.com/gauravmeena0708/inventory-management-software-laravel" target="_blank">GitHub</a></td></tr>
+<tr><td>Inventory System</td><td>Laravel 8 + Bootstrap 5; simple inventory CRUD.</td><td><a href="https://github.com/Dxhxm88/Inventory-System" target="_blank">GitHub</a></td></tr>
+<tr><td>Inventory Management System Laravel</td><td>Laravel 11 + Blade; products, purchases, invoices, customers, reports, roles.</td><td><a href="https://github.com/alsakib748/Inventory-Management-System-Laravel" target="_blank">GitHub</a></td></tr>
+<tr><td>Laravel Inventory with POS</td><td>Laravel + Blade; POS and inventory.</td><td><a href="https://github.com/hassanrazadev/LaravelInventoryWithPOS" target="_blank">GitHub</a></td></tr>
+<tr><td>Laravel POS</td><td>Laravel web POS; dashboard, product search, cart and sales.</td><td><a href="https://github.com/angkosal/laravel-pos" target="_blank">GitHub</a></td></tr>
+<tr><td>Laravel Point of Sale</td><td>Laravel 10 + Bootstrap + Vanilla JS; smart search and stock deduction.</td><td><a href="https://github.com/fajarghifar/laravel-point-of-sale" target="_blank">GitHub</a></td></tr>
+<tr><td>Warehouse Management Laravel</td><td>Laravel 12 + Bootstrap 5; stock workflows, reports, audit logs, RBAC.</td><td><a href="https://github.com/farhanrahmananik/warehouse-management-laravel" target="_blank">GitHub</a></td></tr>
+<tr><td>React/Nest Inventory Management</td><td>React + TypeScript + NestJS + Prisma + PostgreSQL; direct Option C reference.</td><td><a href="https://github.com/samisams1/Inventory-Management-React-Nest-GraphQL-Prisma" target="_blank">GitHub</a></td></tr>
+<tr><td>Next.js Inventory Portal</td><td>Next.js + React + PostgreSQL + Prisma; alternative modern inventory architecture.</td><td><a href="https://github.com/ITC-Web-Team/InventoryPortal" target="_blank">GitHub</a></td></tr>
+<tr><td>Laravel + Vue POS/Inventory</td><td>Laravel + Vue + AdminLTE; useful comparison for reactive UI.</td><td><a href="https://github.com/abi-collab/open-pos-inventory-laravelvue" target="_blank">GitHub</a></td></tr>
+</tbody></table></div>
+</section>
+
+<section><h2>14. Replit references</h2>
+<p>Public Replit indexing did not provide a reliably verifiable exact-match public repository for the selected Laravel + Bootstrap + Vanilla JS + PostgreSQL stack, so no fake repository URL is included. Replit is still useful for building minimal prototypes and importing the verified GitHub repositories above.</p>
+<ul>
+<li><a href="https://replit.com/build" target="_blank">Replit Build</a> — search/build inventory, dashboard and business-app prototypes.</li>
+<li><a href="https://replit.com/" target="_blank">Replit</a> — create and test web prototypes.</li>
+<li><a href="https://replit.com/blog/deploying-django" target="_blank">Replit GitHub import guide</a> — demonstrates importing a GitHub project into Replit.</li>
+<li><a href="https://replit.com/usecases/customers" target="_blank">Replit customer showcase</a> — includes an inventory-management internal-tool example.</li>
+</ul>
+<div class="key warn"><strong>Practical approach:</strong> import one of the verified GitHub Laravel repositories into Replit for experimentation, or build only a frontend prototype there. Do not treat a prototype as the production architecture.</div>
+</section>
+
+<section><h2>15. Testing and acceptance</h2>
+<ul>
+<li>Login and permissions work correctly.</li>
+<li>Real supplier Excel file imports without corrupting data.</li>
+<li>Real laptop queries return the correct machines.</li>
+<li>Same laptop cannot be sold twice under concurrent requests.</li>
+<li>Cash, partial and credit payments calculate correctly.</li>
+<li>Customer balances update correctly.</li>
+<li>Returns restore inventory without destroying historical sale records.</li>
+<li>Historical profit remains correct after later inventory edits.</li>
+<li>Warranty lookup finds the correct sold unit.</li>
+<li>Audit records identify important user actions.</li>
+<li>Backup and recovery procedures are tested.</li>
+</ul>
+</section>
+
+
+<section id="security">
+<h2>17. Security, Privacy & Confidential-Data Protection</h2>
+<p><strong>Security is a core architectural requirement, not an optional feature.</strong> Dubai Plaza will handle customer contact information, payment/credit records, inventory costs, sales history and other commercially confidential information. V1 should therefore use a defense-in-depth security model with encrypted transport, controlled access, tenant isolation, protected secrets, encrypted backups, auditability and continuous testing.</p>
+
+<div class="key good"><strong>Security principle:</strong> no client-side control, hidden button, URL pattern or JavaScript check is treated as an authorization boundary. Every sensitive action must be authenticated and authorized on the Laravel server before data is returned or changed.</div>
+
+<h3>17.1 Security architecture</h3>
+<pre>Customer Browser
+      │
+      │ HTTPS / TLS 1.3 preferred
+      │ HSTS + Secure/HttpOnly/SameSite cookies
+      ▼
+┌───────────────────────────────────────────────┐
+│                 Web / Laravel                  │
+│                                               │
+│ Authentication + MFA for privileged users    │
+│ Server-side authorization / policies          │
+│ CSRF protection                               │
+│ Input validation + output encoding            │
+│ Rate limiting + abuse controls                │
+│ Secure headers                                │
+│ Business-rule validation                      │
+│ Audit logging                                 │
+└──────────────────────┬────────────────────────┘
+                       │
+                       │ TLS-encrypted DB connection
+                       ▼
+┌───────────────────────────────────────────────┐
+│                 PostgreSQL                     │
+│                                               │
+│ Private network / no public DB access         │
+│ Least-privilege application account           │
+│ Tenant / organization isolation               │
+│ Transaction integrity                         │
+│ Encryption at rest supplied by infrastructure │
+└──────────────────────┬────────────────────────┘
+                       │
+             ┌─────────┴─────────┐
+             ▼                   ▼
+      Encrypted Backups     Cloud Object Storage
+      + restore testing     + private access
+</pre>
+
+<h3>17.2 Encryption model</h3>
+<div class="scroll"><table>
+<thead><tr><th>Data location / stage</th><th>Protection</th><th>Requirement</th></tr></thead>
+<tbody>
+<tr><td>Browser → application</td><td>HTTPS/TLS</td><td>All production traffic must use HTTPS. TLS 1.3 is preferred; TLS 1.2 may remain for compatibility where required.</td></tr>
+<tr><td>Application → PostgreSQL</td><td>Database TLS</td><td>Use an encrypted PostgreSQL connection and verify the database certificate where supported.</td></tr>
+<tr><td>Database at rest</td><td>Managed-storage/database encryption</td><td>Production database storage must use provider-supported encryption at rest.</td></tr>
+<tr><td>Backups</td><td>Encrypted backup storage</td><td>Backups must be encrypted, access-controlled and separated from normal application credentials.</td></tr>
+<tr><td>Uploaded XLSX/CSV/documents</td><td>Private object storage + encryption at rest</td><td>Files must not be public by default. Use signed/authorized access when downloads are required.</td></tr>
+<tr><td>Highly sensitive application fields</td><td>Application-level encryption where justified</td><td>Identify sensitive fields individually rather than encrypting everything, because encrypted fields may not support normal searching/indexing.</td></tr>
+<tr><td>Passwords</td><td>One-way password hashing</td><td>Passwords must never be reversibly encrypted or stored in plaintext.</td></tr>
+<tr><td>Encryption keys/secrets</td><td>Secret/environment management</td><td>Never commit production secrets, database passwords or encryption keys to GitHub.</td></tr>
+</tbody></table></div>
+
+<div class="key warn"><strong>Important distinction:</strong> HTTPS/TLS protects information while it travels between browser and server. Encryption at rest protects stored information. True end-to-end encryption, where the server itself cannot decrypt the information, is a different model and would prevent normal server-side search, reporting and business processing unless a specialized E2EE architecture is introduced. For Dubai Plaza V1, use strong transport encryption + storage encryption + application controls rather than incorrectly claiming that normal HTTPS is “end-to-end encryption.”</div>
+
+<h3>17.3 Authentication</h3>
+<ul>
+<li>Use Laravel's established authentication mechanisms rather than building password handling from scratch.</li>
+<li>Passwords must be securely hashed using a modern password-hashing algorithm supported by the framework.</li>
+<li>Use secure, HttpOnly, SameSite cookies for browser sessions.</li>
+<li>Enable session regeneration after authentication and prevent session fixation.</li>
+<li>Use account lockout/rate limiting or progressive throttling for repeated failed logins.</li>
+<li>Provide password reset using short-lived, single-use tokens.</li>
+<li>Require MFA/2FA for the owner and other privileged accounts; strongly consider it for all users.</li>
+<li>Provide secure logout and invalidate the session.</li>
+<li>Automatic inactivity timeout should be configurable, with a shorter timeout for privileged operations if appropriate.</li>
+</ul>
+
+<h3>17.4 Access-control model</h3>
+<div class="scroll"><table>
+<thead><tr><th>Role</th><th>Typical permissions</th><th>Restricted operations</th></tr></thead>
+<tbody>
+<tr><td><strong>Owner</strong></td><td>All shop data, users, settings, reports, financial information, audit logs, backups/export controls.</td><td>None within the application; highly sensitive changes should require re-authentication/MFA.</td></tr>
+<tr><td><strong>Manager</strong></td><td>Inventory, sales, customers, payments, warranty, returns and approved reports.</td><td>User administration, security settings and selected financial/audit operations.</td></tr>
+<tr><td><strong>Staff</strong></td><td>Search inventory, inspect stock, create permitted sales, record permitted payments and view necessary customer information.</td><td>Cost editing, permission changes, destructive administration and sensitive reports unless explicitly granted.</td></tr>
+</tbody></table></div>
+
+<div class="key"><strong>Server-side authorization rule:</strong> permissions must be enforced by Laravel policies/gates/service-layer checks on every protected request. A user must not gain access merely by changing an ID in a URL, modifying JavaScript, calling an endpoint directly or submitting a forged request.</div>
+
+<h3>17.5 Tenant and organization isolation</h3>
+<ul>
+<li>Every business-owned record must be linked to an organization/shop boundary.</li>
+<li>Queries must scope records to the authenticated user's organization before returning data.</li>
+<li>Never trust an organization ID supplied by the browser.</li>
+<li>When V2 adds multiple branches, branch-level permissions must be enforced separately from organization-level permissions.</li>
+<li>Automated tests must attempt cross-organization access and confirm it is denied.</li>
+<li>Administrative jobs, exports and reports must apply the same tenant restrictions as normal pages.</li>
+</ul>
+
+<pre>Request
+  ↓
+Authenticate user
+  ↓
+Resolve trusted organization from session/account
+  ↓
+Authorize requested action
+  ↓
+Scope database query to organization/shop
+  ↓
+Validate input
+  ↓
+Perform transaction
+  ↓
+Write audit event
+  ↓
+Return only authorized data</pre>
+
+<h3>17.6 Protection against common bypasses</h3>
+<div class="scroll"><table>
+<thead><tr><th>Threat / bypass</th><th>Control</th><th>Test</th></tr></thead>
+<tbody>
+<tr><td>Changing URL IDs / IDOR</td><td>Server-side ownership and policy checks.</td><td>Attempt to read/update another organization's record.</td></tr>
+<tr><td>SQL injection</td><td>Eloquent/query parameterization; never concatenate untrusted SQL.</td><td>Automated and penetration-style input tests.</td></tr>
+<tr><td>XSS</td><td>Output escaping, validation and safe HTML handling.</td><td>Inject script payloads into customer/product fields.</td></tr>
+<tr><td>CSRF</td><td>Laravel CSRF protection for state-changing browser requests.</td><td>Submit requests without valid CSRF token.</td></tr>
+<tr><td>Brute-force login</td><td>Rate limiting, throttling and MFA.</td><td>Repeated failed-login test.</td></tr>
+<tr><td>Session theft</td><td>Secure cookies, HTTPS, session rotation and expiry.</td><td>Inspect cookie flags and session lifecycle.</td></tr>
+<tr><td>Mass assignment</td><td>Explicitly allow writable fields; never blindly bind request data.</td><td>Submit unauthorized fields such as cost, role or organization_id.</td></tr>
+<tr><td>File upload abuse</td><td>Validate extension/MIME/size, store outside executable web paths and generate safe names.</td><td>Upload malformed, oversized and executable-looking files.</td></tr>
+<tr><td>Duplicate sale/concurrency</td><td>Database transaction + row locking/conditional stock update.</td><td>Attempt simultaneous sales of the same laptop.</td></tr>
+<tr><td>Information leakage</td><td>Generic production errors, restricted logs and no secrets in responses.</td><td>Trigger validation/server errors and inspect responses.</td></tr>
+<tr><td>Unauthorized export</td><td>Permission checks on exports and report endpoints.</td><td>Call export URLs as staff without permission.</td></tr>
+</tbody></table></div>
+
+<h3>17.7 Confidential customer-data policy</h3>
+<ul>
+<li>Collect only information necessary for sales, delivery, warranty, ledger and legitimate business operations.</li>
+<li>Do not expose customer lists, phone numbers, addresses or balances to users who do not need them.</li>
+<li>Do not place confidential customer information in browser URLs, analytics events or public logs.</li>
+<li>Production logs must avoid passwords, authentication tokens, full payment credentials and unnecessary personal information.</li>
+<li>Exports containing customer information must be permission-controlled and treated as confidential files.</li>
+<li>Downloaded exports should not remain permanently exposed through public URLs.</li>
+<li>Define retention/deletion rules appropriate to business and legal requirements before production launch.</li>
+<li>When staff accounts leave the business, disable access immediately rather than sharing passwords.</li>
+</ul>
+
+<h3>17.8 Database and infrastructure security</h3>
+<ul>
+<li>PostgreSQL should not be directly exposed to the public internet in the normal production architecture.</li>
+<li>Use a dedicated least-privilege database account for the application.</li>
+<li>Separate production credentials from development/test credentials.</li>
+<li>Restrict server/admin access using strong authentication and SSH keys or the cloud provider's secure access mechanisms.</li>
+<li>Keep Laravel/PHP, PostgreSQL, operating-system packages and dependencies patched.</li>
+<li>Use a firewall/security group to expose only required services.</li>
+<li>Disable debug mode in production.</li>
+<li>Use secure HTTP response headers such as Content-Security-Policy where compatible with the application, plus X-Content-Type-Options, Referrer-Policy and frame protections.</li>
+<li>Centralize security monitoring/error tracking without sending unnecessary confidential customer information to third parties.</li>
+</ul>
+
+<h3>17.9 Backup and disaster-recovery policy</h3>
+<div class="scroll"><table>
+<thead><tr><th>Control</th><th>V1 policy</th></tr></thead>
+<tbody>
+<tr><td>Automated database backups</td><td>Use managed PostgreSQL automated backups with a documented retention period.</td></tr>
+<tr><td>Point-in-time recovery</td><td>Enable where the selected managed PostgreSQL service supports it and where commercially justified.</td></tr>
+<tr><td>Backup encryption</td><td>All backups must be encrypted at rest.</td></tr>
+<tr><td>Backup access</td><td>Only authorized owner/infrastructure administrators may access backups.</td></tr>
+<tr><td>Separation</td><td>Backups must not depend on the same single server/disk as production data.</td></tr>
+<tr><td>Export</td><td>Provide controlled business-data export for continuity and migration.</td></tr>
+<tr><td>Restore testing</td><td>Perform documented restore tests periodically; a backup is not considered reliable until it has been restored successfully.</td></tr>
+<tr><td>Recovery objectives</td><td>Define target RPO/RTO with the business before launch and test against those targets.</td></tr>
+</tbody></table></div>
+
+<h3>17.10 Secrets management</h3>
+<pre>Production secret
+      ↓
+Cloud secret / protected environment configuration
+      ↓
+Laravel application
+      ↓
+Database / encryption service / external service
+
+Never:
+GitHub repository → production password
+Frontend JavaScript → database password
+HTML source → private API key</pre>
+
+<h3>17.11 Security monitoring and audit</h3>
+<p>Record security-relevant events without logging unnecessary confidential content:</p>
+<ul>
+<li>Successful and failed logins.</li>
+<li>Password reset and MFA events.</li>
+<li>User creation, role changes and account disabling.</li>
+<li>Inventory cost/price changes.</li>
+<li>Sales, refunds, returns and payment changes.</li>
+<li>Customer ledger adjustments.</li>
+<li>Exports and sensitive report access.</li>
+<li>Authorization failures and suspicious repeated requests.</li>
+</ul>
+<p>Audit records should be append-oriented and protected from ordinary staff modification. Administrative access to audit data should itself be controlled and logged.</p>
+
+<h3>17.12 Security threat model</h3>
+<div class="scroll"><table>
+<thead><tr><th>Threat actor / event</th><th>Potential impact</th><th>Primary mitigation</th></tr></thead>
+<tbody>
+<tr><td>External attacker</td><td>Account takeover, data theft, unauthorized transactions.</td><td>HTTPS, MFA, rate limiting, secure sessions, patching, authorization and monitoring.</td></tr>
+<tr><td>Compromised staff account</td><td>Customer/business-data exposure.</td><td>Least privilege, MFA, short sessions, audit logs and rapid account disablement.</td></tr>
+<tr><td>Malicious/curious employee</td><td>Access to another shop or restricted financial data.</td><td>Server-side RBAC, tenant isolation and export restrictions.</td></tr>
+<tr><td>Client-side manipulation</td><td>Changed price, cost, role or organization ID.</td><td>Never trust browser values; validate and authorize on the server.</td></tr>
+<tr><td>Database exposure</td><td>Bulk confidential-data theft.</td><td>Private network, least privilege, encryption at rest, encrypted connections and restricted admin access.</td></tr>
+<tr><td>Lost/compromised backup</td><td>Historical customer/business-data exposure.</td><td>Encrypted backups, separate access controls and retention policy.</td></tr>
+<tr><td>Malicious file upload</td><td>Code execution or data theft.</td><td>Strict file validation, safe storage and no executable upload paths.</td></tr>
+<tr><td>Concurrent sale</td><td>Double-selling one physical laptop.</td><td>Database transactions, locking and unique state rules.</td></tr>
+<tr><td>Ransomware/server failure</td><td>Service interruption or data loss.</td><td>Managed backups, restore tests, separate backup storage and documented recovery.</td></tr>
+</tbody></table></div>
+
+<h3>17.13 Security testing checklist</h3>
+<div class="grid">
+<div class="card"><strong>Authentication</strong><br>□ Login/logout<br>□ Password hashing<br>□ Reset flow<br>□ MFA<br>□ Session expiry<br>□ Brute-force protection</div>
+<div class="card"><strong>Authorization</strong><br>□ Owner/manager/staff permissions<br>□ Direct URL tests<br>□ Direct API tests<br>□ Cross-tenant tests<br>□ Export restrictions</div>
+<div class="card"><strong>Application security</strong><br>□ SQL injection<br>□ XSS<br>□ CSRF<br>□ Mass assignment<br>□ File upload<br>□ Security headers</div>
+<div class="card"><strong>Data protection</strong><br>□ HTTPS<br>□ DB TLS<br>□ Encryption at rest<br>□ Private storage<br>□ Secret scanning<br>□ Log review</div>
+<div class="card"><strong>Business integrity</strong><br>□ Duplicate-sale test<br>□ Payment consistency<br>□ Return consistency<br>□ Historical cost integrity<br>□ Audit trail</div>
+<div class="card"><strong>Recovery</strong><br>□ Automated backup<br>□ Backup encryption<br>□ Restore test<br>□ RPO/RTO test<br>□ Disaster procedure</div>
+</div>
+
+<h3>17.14 Production security acceptance criteria</h3>
+<ul>
+<li>No production page or API accepts sensitive traffic over plain HTTP.</li>
+<li>No production database port is publicly exposed unless explicitly justified and tightly restricted.</li>
+<li>No user can access another organization's data by modifying URLs, request bodies or API parameters.</li>
+<li>No staff user can promote their own role or alter their organization boundary.</li>
+<li>No client-side JavaScript can override server-side price, cost, permission or stock rules.</li>
+<li>Passwords, secrets and encryption keys do not appear in source control, frontend code or normal application logs.</li>
+<li>Backups are encrypted and a restore has been successfully tested.</li>
+<li>Critical security events are auditable.</li>
+<li>Production debug mode is disabled and error responses do not reveal stack traces or secrets.</li>
+<li>A security review is completed before real customer data is loaded.</li>
+</ul>
+
+<div class="key good"><strong>Security target:</strong> the system should be designed so that confidentiality and integrity do not depend on users behaving honestly or on the browser behaving correctly. The server, database and infrastructure must independently enforce the security boundary.</div>
+</section>
+
+<section><h2>16. Final recommendation</h2>
+<div class="key good"><strong>Use Option A for Dubai Plaza V1:</strong><br><br>
+HTML5 + CSS3 + Bootstrap 5 + Vanilla JavaScript<br>
++ Laravel + PHP<br>
++ PostgreSQL<br>
++ PhpSpreadsheet + Eloquent + Laravel Auth/Sanctum + Chart.js<br>
++ Git/GitHub + Composer/npm + Postman</div>
+<p>Do not choose React + NestJS merely because it is more modern. Choose it later if real usage proves that a highly component-driven frontend, larger SaaS scale, real-time interfaces or dedicated application clients justify the additional architecture.</p>
+<p><strong>Build the core correctly first. Optimize based on real usage.</strong> The first measurable outcome is not the number of technologies used; it is whether a shop employee can reliably search for the right laptop, inspect it, sell it, collect payment, record the customer's balance and see the correct profit.</p>
+</section>
+
+<footer>
+<strong>Dubai Plaza Stock System — Complete Product & Technical Report</strong><br>
+Web-only V1 · HTML/CSS/Bootstrap/JavaScript + Laravel/PHP + PostgreSQL<br>
+Third-party product and repository names belong to their respective owners. Public competitor features are used only for benchmarking and product planning.
+</footer>
+</main></body></html>
