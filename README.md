@@ -24,18 +24,19 @@ npx serve .
 
 ## Laravel backend (local)
 
-See `backend/README.md`. Quick start:
+See `backend/README.md`. **One command (Windows / Laragon):**
 
 ```powershell
+.\scripts\setup-all.ps1
 cd backend
-composer install
-copy .env.example .env
-php artisan key:generate
-php artisan migrate:fresh --seed
-php artisan serve
+C:\laragon\bin\php\php-8.3.30-Win32-vs16-x64\php.exe artisan serve
 ```
 
+Or manual: `composer install` → copy `.env.example` → `artisan key:generate` → `migrate:fresh --seed` → `npm install && npm run build`.
+
 Demo login: `owner@dubaiplaza.test` / `password`
+
+**Laragon path (full clone):** `C:\laragon\www\dubaiplaza` — document root for Apache: `backend/public`
 
 ## Production stack
 
