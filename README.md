@@ -16,14 +16,30 @@ npx serve .
 
 | Path | Description |
 |------|-------------|
+| `backend/` | **Laravel app** — login, roles, laptop & accessory inventory |
 | `index.html` | Full Zoho-style app wireframe with navigation |
 | `sample-inventory-import.csv` | Sample lot import file |
 | `INVENTORY_IMPORT_README.txt` | Column mapping guide |
 | `docs/` | Product report and additional wireframe HTML |
 
-## Planned production stack
+## Laravel backend (local)
 
-Laravel + PostgreSQL + Bootstrap (see technical report in `docs/`).
+See `backend/README.md`. Quick start:
+
+```powershell
+cd backend
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan serve
+```
+
+Demo login: `owner@dubaiplaza.test` / `password`
+
+## Production stack
+
+Laravel + PostgreSQL + Bootstrap (wireframe remains static demo on Vercel).
 
 ## License
 
